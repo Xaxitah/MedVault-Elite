@@ -56,20 +56,13 @@ npm run build
 
 Cria a pasta `dist/` com tudo pronto. São ~325 MB e ~4.400 arquivos.
 
-## Passo 4 — Publicar
+## Passo 4 — Trancar o acesso ANTES de publicar
 
-Na primeira vez ele abre o navegador para você entrar na Cloudflare.
+Isto vem antes de propósito. A política pode ser criada para um endereço que
+ainda não existe — e assim o site nunca fica aberto, nem por um minuto. Fazer
+na ordem contrária deixaria 2.423 figuras de livro públicas até você terminar.
 
-```bash
-npx wrangler pages deploy dist --project-name=medvault
-```
-
-No fim aparece um endereço como `https://medvault.pages.dev`.
-**O site já está no ar — mas ainda aberto.** O passo 5 é o que fecha.
-
-## Passo 5 — Trancar o acesso (não pule)
-
-Isto é feito no site da Cloudflare, não por comando:
+É feito no site da Cloudflare, não por comando:
 
 1. Entre em https://one.dash.cloudflare.com
 2. No menu, **Access → Applications → Add an application**
@@ -84,13 +77,22 @@ Isto é feito no site da Cloudflare, não por comando:
    - *Include* → `Emails` → cole os e-mails do grupo, um por linha
 6. Salve.
 
-Pronto. Agora quem abrir o endereço recebe um código por e-mail e só entra se
+Pronto. Quem abrir o endereço recebe um código por e-mail e só entra se
 estiver na lista. Para adicionar alguém depois, é só voltar nessa política e
 incluir o e-mail — não precisa mexer no site.
 
-> **Confira antes de divulgar:** abra o endereço numa janela anônima. Se pedir
-> e-mail, está trancado. Se abrir o site direto, a política não foi aplicada —
-> volte ao passo 5.
+## Passo 5 — Publicar
+
+Na primeira vez ele abre o navegador para você entrar na Cloudflare.
+
+```bash
+npx wrangler pages deploy dist --project-name=medvault
+```
+
+No fim aparece o endereço `https://medvault.pages.dev`.
+
+**Confira agora, numa janela anônima:** tem que pedir e-mail. Se abrir o site
+direto, a política do passo 4 não pegou — não divulgue o link até corrigir.
 
 ---
 
