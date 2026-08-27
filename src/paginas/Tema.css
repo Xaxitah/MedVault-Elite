@@ -1,0 +1,9 @@
+/* Grupos por tipo em duas colunas quando há espaço — densidade é respeito
+   (Prancha, princípio 5). Um tema com 8 formatos numa coluna só vira rolagem
+   infinita; quem estuda quer ver o que existe de uma vez. */
+.mv-tema__grupos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr));
+  gap: var(--mv-e-4) var(--mv-e-7);
+  align-items: start;
+}

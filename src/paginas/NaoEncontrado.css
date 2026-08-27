@@ -1,0 +1,37 @@
+.mv-404 { max-width: 58ch; padding-top: var(--mv-e-9); }
+
+.mv-404__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-2xl);
+  font-weight: 600;
+  line-height: var(--mv-lh-titulo);
+  letter-spacing: var(--mv-ls-display);
+  color: var(--mv-ink);
+  margin-bottom: var(--mv-e-4);
+}
+
+.mv-404__texto {
+  font-family: var(--mv-fonte-leitura);
+  font-size: var(--mv-t-md);
+  line-height: 1.65;
+  color: var(--mv-ink-muted);
+}
+
+.mv-404__url {
+  font-family: var(--mv-fonte-mono);
+  font-size: 0.875em;
+  background: var(--mv-ground-sunk);
+  padding: 0.12em 0.4em;
+  border-radius: 4px;
+  color: var(--mv-ink);
+  word-break: break-all;
+}
+
+.mv-404__saidas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mv-e-3);
+  margin-top: var(--mv-e-6);
+  padding-top: var(--mv-e-5);
+  border-top: 1px solid var(--mv-linha-fina);
+}

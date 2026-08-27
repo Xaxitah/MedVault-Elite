@@ -1,0 +1,159 @@
+.mv-busca__termo {
+  font-style: italic;
+  color: var(--acento-ink);
+}
+
+.mv-busca__campo {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-3);
+  max-width: 62ch;
+  padding: 0 var(--mv-e-4);
+  min-height: 52px;
+  margin-bottom: var(--mv-e-6);
+  background: var(--mv-ground-raised);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  color: var(--mv-ink-faint);
+  transition: border-color var(--mv-d-rapido) var(--mv-ease-saida),
+              box-shadow var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-busca__campo:focus-within {
+  border-color: var(--acento-ink);
+  box-shadow: 0 0 0 3px var(--acento-glow);
+}
+.mv-busca__campo input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: none;
+  outline: none;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-md);
+  color: var(--mv-ink);
+}
+.mv-busca__campo input::placeholder { color: var(--mv-ink-faint); }
+.mv-busca__campo input::-webkit-search-cancel-button { appearance: none; }
+
+.mv-busca__limpar {
+  display: grid;
+  place-items: center;
+  width: 30px; height: 30px;
+  border-radius: var(--mv-r-full);
+  color: var(--mv-ink-faint);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-busca__limpar:hover { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+
+.mv-busca__dica,
+.mv-busca__conta {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+  margin-bottom: var(--mv-e-4);
+}
+.mv-busca__conta strong { color: var(--mv-ink); font-weight: 700; }
+
+/* ── resultados ────────────────────────────────────────────────────────── */
+
+.mv-busca__lista { list-style: none; display: flex; flex-direction: column; }
+
+.mv-busca__item {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-3);
+  padding: var(--mv-e-3) var(--mv-e-3) var(--mv-e-3) 0;
+  border-bottom: 1px solid var(--mv-linha-fina);
+  min-height: 44px;
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-busca__item:hover { background: var(--acento-tint); transition-duration: 0ms; }
+
+.mv-busca__icone { flex: none; color: var(--acento-mid); margin-left: var(--mv-e-3); }
+
+.mv-busca__corpo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+
+.mv-busca__titulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--mv-ink);
+  line-height: 1.35;
+}
+
+/* Realce: sublinha grossa em tint, não fundo cheio. Fundo cheio numa lista
+   de 120 resultados vira mancha. */
+.mv-busca__realce {
+  background: linear-gradient(to bottom, transparent 58%, var(--acento-tint) 58%);
+  color: inherit;
+  font-weight: 700;
+  padding: 0 1px;
+}
+
+.mv-busca__meta {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mv-busca__seta {
+  flex: none;
+  color: var(--mv-ink-faint);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida),
+              transform var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-busca__item:hover .mv-busca__seta { opacity: 1; transform: none; color: var(--acento-ink); }
+
+/* ── sugestões ─────────────────────────────────────────────────────────── */
+
+.mv-busca__sugestoes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
+  gap: var(--mv-e-2) var(--mv-e-5);
+}
+
+.mv-busca__sugestao {
+  display: flex;
+  align-items: baseline;
+  gap: var(--mv-e-2);
+  padding: var(--mv-e-3) var(--mv-e-3) var(--mv-e-3) var(--mv-e-3);
+  border-left: 2px solid var(--acento-ink);
+  border-bottom: 1px solid var(--mv-linha-fina);
+  min-height: 44px;
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-busca__sugestao:hover { background: var(--acento-tint); transition-duration: 0ms; }
+
+.mv-busca__sug-disc {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  color: var(--acento-ink);
+  white-space: nowrap;
+}
+.mv-busca__sug-tema {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mv-busca__sug-n {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  color: var(--mv-ink-faint);
+}
+
+@media (max-width: 640px) {
+  .mv-busca__titulo { white-space: normal; }
+  .mv-busca__seta { display: none; }
+}

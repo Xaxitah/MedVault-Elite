@@ -1,0 +1,681 @@
+/* ============================================================================
+   Home — frontispício do atlas
+   ============================================================================
+   Linguagem Prancha (docs/LINGUAGEM-PRANCHA.md).
+
+   As três decisões que governam este arquivo:
+
+   1. Zero caixa. Nenhuma regra aqui escreve `border` + `background` + `shadow`
+      no mesmo elemento. A separação é sempre espaço primeiro, fio depois.
+   2. O pigmento só aparece onde identifica: o fio de 2px que abre cada seção,
+      o ponto ao lado do nome da disciplina, a régua de volume. Nunca como
+      fundo de área de leitura.
+   3. Densidade com hierarquia. O herói é o único ponto focal; tudo abaixo é
+      informação compacta e escaneável, com um único nível de ênfase por bloco.
+   ========================================================================= */
+
+.mv-inicio {
+  max-width: var(--mv-conteudo-max);
+  margin: 0 auto;
+  padding: var(--mv-e-7) var(--mv-e-7) var(--mv-e-9);
+}
+
+/* ── entrada encenada ──────────────────────────────────────────────────
+   Só na primeira dobra, e só em opacity/transform. Nada abaixo do herói
+   anima na rolagem: texto que se mexe enquanto é lido é exatamente a
+   fadiga que este site existe para resolver.
+
+   O escalonamento para em 4 degraus (dossiê 3(d), regra 4). Sob
+   `prefers-reduced-motion` o global já zera a duração; aqui zeramos também
+   o atraso, senão o conteúdo ficaria invisível esperando um tempo que não
+   vai mais acontecer. */
+
+.mv-entra {
+  animation: mv-entra var(--mv-d-lento) var(--mv-ease-saida) both;
+  animation-delay: calc(var(--i, 0) * 45ms);
+}
+
+@keyframes mv-entra {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mv-entra { animation-delay: 0ms; }
+}
+
+/* ── herói ─────────────────────────────────────────────────────────────
+   Alinhado à esquerda, não centralizado: a leitura começa onde a coluna
+   começa, e é para lá que a busca puxa o olho em seguida. */
+
+.mv-heroi {
+  padding: var(--mv-e-7) 0 var(--mv-e-8);
+}
+
+.mv-heroi__titulo {
+  max-width: 17ch;
+  margin: var(--mv-e-4) 0 var(--mv-e-5);
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-4xl);
+  /* Peso 400, não 700: serifa display pesada em corpo grande vira anúncio de
+     jornal. O caráter vem do tamanho óptico, não da gordura. */
+  font-weight: 400;
+  font-variation-settings: "opsz" 144;
+  line-height: var(--mv-lh-apertado);
+  letter-spacing: var(--mv-ls-display);
+  color: var(--mv-ink);
+  text-wrap: balance;
+}
+
+.mv-heroi__linha {
+  max-width: 46ch;
+  font-family: var(--mv-fonte-leitura);
+  font-size: var(--mv-t-lg);
+  line-height: var(--mv-lh-leitura);
+  color: var(--mv-ink-body);
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+}
+
+/* ── busca ─────────────────────────────────────────────────────────────
+   A ação mais provável de quem chega. Campo largo, um fio, sem sombra. */
+
+.mv-heroi__busca {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-3);
+  width: min(100%, 40rem);
+  margin-top: var(--mv-e-6);
+  padding: var(--mv-e-2) var(--mv-e-2) var(--mv-e-2) var(--mv-e-4);
+  background: var(--mv-ground-raised);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  transition:
+    border-color var(--mv-d-rapido) var(--mv-ease-saida),
+    box-shadow var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-heroi__busca:focus-within {
+  border-color: var(--acento-ink);
+  box-shadow: 0 0 0 3px var(--acento-glow);
+}
+
+.mv-heroi__lupa { color: var(--mv-ink-faint); display: flex; }
+
+.mv-heroi__busca input {
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  border: none;
+  background: none;
+  outline: none;
+  font-size: var(--mv-t-md);
+  color: var(--mv-ink);
+}
+.mv-heroi__busca input::placeholder { color: var(--mv-ink-faint); }
+.mv-heroi__busca input::-webkit-search-cancel-button { appearance: none; }
+
+.mv-heroi__ir {
+  flex: none;
+  min-height: 44px;
+  padding: 0 var(--mv-e-5);
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+  border-radius: var(--mv-r-sm);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition:
+    opacity var(--mv-d-rapido) var(--mv-ease-saida),
+    transform var(--mv-d-instant) var(--mv-ease-saida);
+}
+.mv-heroi__ir:hover { opacity: 0.9; transition-duration: 0ms; }
+.mv-heroi__ir:active { transform: scale(0.98); }
+
+.mv-heroi__dica {
+  margin-top: var(--mv-e-3);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+}
+.mv-heroi__dica[data-aviso] { color: var(--mv-erro-ink); font-weight: 500; }
+
+.mv-heroi__dica kbd {
+  display: inline-block;
+  min-width: 1.5em;
+  padding: 1px 5px;
+  border: 1px solid var(--mv-linha);
+  border-radius: 4px;
+  background: var(--mv-ground-sunk);
+  font-family: var(--mv-fonte-mono);
+  font-size: 0.75rem;
+  text-align: center;
+  color: var(--mv-ink);
+}
+
+/* ── registro do acervo ────────────────────────────────────────────────
+   Número grande sozinho não prova nada — prova de substância é número COM
+   o recorte do que ele conta. Daí o terceiro nível: valor, rótulo, glosa.
+   Separados por fio vertical; nunca por caixa. */
+
+.mv-registro {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin-top: var(--mv-e-8);
+  padding-top: var(--mv-e-5);
+  border-top: 1px solid var(--mv-linha-fina);
+}
+
+.mv-registro__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-1);
+  padding: 0 var(--mv-e-5);
+}
+.mv-registro__item:first-child { padding-left: 0; }
+.mv-registro__item + .mv-registro__item { border-left: 1px solid var(--mv-linha-fina); }
+
+.mv-registro__valor {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-2xl);
+  font-weight: 500;
+  font-variation-settings: "opsz" 60;
+  line-height: 1.05;
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-registro__rotulo { color: var(--mv-ink-muted); }
+
+.mv-registro__gloss {
+  margin-top: var(--mv-e-1);
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--mv-ink-muted);
+  text-wrap: pretty;
+}
+
+/* ── seções ────────────────────────────────────────────────────────────
+   O fio de 2px em pigmento abrindo cada seção é a assinatura visual nº2 —
+   o mesmo elemento que abre cada h2 na página de leitura. */
+
+.mv-secao {
+  margin-top: var(--mv-e-9);
+  padding-top: var(--mv-e-4);
+  border-top: 2px solid var(--acento-ink);
+}
+
+.mv-secao__cabeca {
+  display: grid;
+  grid-template-columns: minmax(0, auto) minmax(0, 38ch);
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mv-e-4) var(--mv-e-7);
+  margin-bottom: var(--mv-e-6);
+}
+
+.mv-secao__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-2xl);
+  font-weight: 500;
+  font-variation-settings: "opsz" 72;
+  line-height: var(--mv-lh-titulo);
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-secao__nota {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--mv-ink-muted);
+  text-wrap: pretty;
+}
+
+.mv-secao__rodape {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--mv-e-2) var(--mv-e-4);
+  margin-top: var(--mv-e-5);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+}
+
+.mv-link-fio {
+  color: var(--acento-ink);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+  text-decoration-color: var(--acento-hair);
+  transition: text-decoration-color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-link-fio:hover { text-decoration-color: var(--acento-ink); transition-duration: 0ms; }
+
+/* ── lista de disciplinas ──────────────────────────────────────────────
+   Lista, não grade de cards: nove linhas densas dizem mais que nove caixas
+   com uma frase cada. A régua sob cada linha carrega dado — o volume do
+   acervo em relação à maior disciplina —, não decoração. */
+
+.mv-discs { list-style: none; }
+
+.mv-disc { position: relative; }
+
+.mv-disc__link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto 16px;
+  align-items: center;
+  gap: var(--mv-e-5);
+  padding: var(--mv-e-4) var(--mv-e-4) var(--mv-e-4) var(--mv-e-3);
+  margin-left: calc(var(--mv-e-3) * -1);
+  border-radius: var(--mv-r-md);
+  /* Hover assimétrico do Linear: entra em 0ms, sai em 150ms. A duração de
+     saída vive aqui; o estado :hover zera a de entrada. */
+  transition: background-color 150ms var(--mv-ease-saida);
+}
+.mv-disc__link:hover {
+  background-color: color-mix(in srgb, var(--acento-tint) 52%, transparent);
+  transition-duration: 0ms;
+}
+
+.mv-disc__texto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-1);
+  min-width: 0;
+}
+
+.mv-disc__nome {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 500;
+  font-variation-settings: "opsz" 40;
+  line-height: var(--mv-lh-titulo);
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+  transition: color 150ms var(--mv-ease-saida);
+}
+.mv-disc__link:hover .mv-disc__nome { color: var(--acento-ink); transition-duration: 0ms; }
+
+/* Pigmento + rótulo sempre juntos: cor nunca é o único canal (deuteranopia
+   colapsa petróleo e eucalipto um no outro). */
+.mv-disc__ponto {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+}
+
+.mv-disc__desc {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--mv-ink-muted);
+  max-width: 56ch;
+}
+
+.mv-disc__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--mv-e-2) var(--mv-e-3);
+  margin-top: var(--mv-e-1);
+}
+.mv-disc__estrutura { font-size: var(--mv-t-xs); color: var(--mv-ink-faint); }
+
+.mv-disc__quanto {
+  display: flex;
+  align-items: baseline;
+  gap: var(--mv-e-2);
+  white-space: nowrap;
+}
+
+.mv-disc__total {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 500;
+  font-variation-settings: "opsz" 40;
+  line-height: 1;
+  color: var(--mv-ink);
+}
+.mv-disc__unid { font-size: var(--mv-t-xs); color: var(--mv-ink-faint); }
+
+.mv-disc__seta {
+  display: flex;
+  color: var(--mv-ink-faint);
+  transition:
+    transform var(--mv-d-rapido) var(--mv-ease-saida),
+    color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-disc__link:hover .mv-disc__seta {
+  transform: translateX(3px);
+  color: var(--acento-ink);
+  transition-duration: var(--mv-d-instant);
+}
+
+/* A régua: 3px de pigmento sobre um fio de página inteira. Os 3px são o
+   mínimo que a WCAG 1.4.11 aceita para um elemento gráfico portador de
+   informação, e `mid` dá ≥3:1 no papel. */
+.mv-disc__regua {
+  display: block;
+  height: 4px;
+  border-bottom: 1px solid var(--mv-linha-fina);
+}
+
+.mv-disc__regua-fio {
+  display: block;
+  height: 3px;
+  background: var(--acento-mid);
+  transform: scaleX(var(--f, 0));
+  transform-origin: 0 50%;
+  /* Movimento que revela estrutura (princípio 6): as réguas assentam juntas
+     e o resultado é a silhueta do acervo. Sem movimento — reduced-motion ou
+     JS desligado — a informação continua toda lá. */
+  animation: mv-regua var(--mv-d-lento) var(--mv-ease-saida) both;
+}
+
+@keyframes mv-regua {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(var(--f, 0)); }
+}
+
+/* ── pilha por triar ───────────────────────────────────────────────────
+   Material real, mas sem disciplina: fica visível e alcançável, e fora das
+   contagens, porque contá-lo como matéria infla o número. */
+
+.mv-triagem {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mv-e-3) var(--mv-e-5);
+  margin-top: var(--mv-e-5);
+  padding: var(--mv-e-4) var(--mv-e-4) var(--mv-e-4) var(--mv-e-3);
+  margin-left: calc(var(--mv-e-3) * -1);
+  border-radius: var(--mv-r-md);
+  transition: background-color 150ms var(--mv-ease-saida);
+}
+.mv-triagem:hover {
+  background-color: var(--mv-ground-sunk);
+  transition-duration: 0ms;
+}
+
+.mv-triagem__texto {
+  max-width: 62ch;
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--mv-ink-muted);
+}
+.mv-triagem__texto strong { color: var(--mv-ink); font-weight: 600; }
+
+.mv-triagem__ir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  color: var(--mv-ink-muted);
+  white-space: nowrap;
+}
+.mv-triagem__ir svg { transition: transform var(--mv-d-rapido) var(--mv-ease-saida); }
+.mv-triagem:hover .mv-triagem__ir { color: var(--mv-ink); }
+.mv-triagem:hover .mv-triagem__ir svg {
+  transform: translateX(3px);
+  transition-duration: var(--mv-d-instant);
+}
+
+/* ── chave dos artefatos ───────────────────────────────────────────────
+   Uma chave de prancha: glifo, nome, quantidade, uma linha do que é. Duas
+   colunas de linhas com fio, não uma grade de cartões. */
+
+.mv-tipos {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 23rem), 1fr));
+  column-gap: var(--mv-e-8);
+}
+
+.mv-tipo {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) auto;
+  grid-template-areas:
+    "glifo nome  n"
+    ".     desc  desc";
+  align-items: baseline;
+  column-gap: var(--mv-e-3);
+  row-gap: 2px;
+  padding: var(--mv-e-3) 0;
+  border-top: 1px solid var(--mv-linha-fina);
+}
+
+.mv-tipo__glifo {
+  grid-area: glifo;
+  display: flex;
+  align-self: center;
+  color: var(--mv-ink-muted);
+}
+
+.mv-tipo__nome {
+  grid-area: nome;
+  font-size: var(--mv-t-base);
+  font-weight: 600;
+  color: var(--mv-ink);
+}
+
+.mv-tipo__n {
+  grid-area: n;
+  font-size: var(--mv-t-base);
+  font-weight: 600;
+  color: var(--mv-ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.mv-tipo__desc {
+  grid-area: desc;
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--mv-ink-muted);
+}
+
+/* ── caminhos colaborativos ────────────────────────────────────────────
+   Dois blocos separados por um fio vertical. Sem moldura: o que os separa
+   é espaço, e o fio é o acento, não a caixa. */
+
+.mv-caminhos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--mv-e-7);
+}
+
+.mv-caminho {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mv-e-2);
+  padding: var(--mv-e-5);
+  margin: calc(var(--mv-e-5) * -1) 0 calc(var(--mv-e-5) * -1) calc(var(--mv-e-5) * -1);
+  border-radius: var(--mv-r-md);
+  transition: background-color 150ms var(--mv-ease-saida);
+}
+.mv-caminho:hover {
+  background-color: color-mix(in srgb, var(--acento-tint) 45%, transparent);
+  transition-duration: 0ms;
+}
+.mv-caminho + .mv-caminho {
+  border-left: 1px solid var(--mv-linha-fina);
+  border-radius: 0 var(--mv-r-md) var(--mv-r-md) 0;
+}
+
+.mv-caminho__glifo {
+  display: flex;
+  margin-bottom: var(--mv-e-2);
+  color: var(--acento-ink);
+}
+
+.mv-caminho__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 500;
+  font-variation-settings: "opsz" 40;
+  line-height: var(--mv-lh-titulo);
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+  transition: color 150ms var(--mv-ease-saida);
+}
+.mv-caminho:hover .mv-caminho__titulo { color: var(--acento-ink); transition-duration: 0ms; }
+
+.mv-caminho__texto {
+  max-width: 42ch;
+  font-family: var(--mv-fonte-leitura);
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--mv-ink-muted);
+}
+
+.mv-caminho__ir {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: var(--mv-e-3);
+  min-height: 24px;
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  color: var(--acento-ink);
+}
+.mv-caminho__ir svg { transition: transform var(--mv-d-rapido) var(--mv-ease-saida); }
+.mv-caminho:hover .mv-caminho__ir svg {
+  transform: translateX(3px);
+  transition-duration: var(--mv-d-instant);
+}
+
+/* ── falha e vazio ─────────────────────────────────────────────────────
+   Estado ruim não pode parecer bug: diz o que aconteceu, o que ainda
+   funciona e qual é o próximo passo. */
+
+.mv-falha {
+  max-width: 54ch;
+  margin-top: var(--mv-e-8);
+  padding-top: var(--mv-e-4);
+  border-top: 2px solid var(--mv-linha);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mv-e-3);
+}
+
+.mv-falha h2 {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 500;
+  font-variation-settings: "opsz" 40;
+  line-height: var(--mv-lh-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-falha p {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--mv-ink-muted);
+}
+
+.mv-botao-fio {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  margin-top: var(--mv-e-2);
+  min-height: 44px;
+  padding: 0 var(--mv-e-5);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  color: var(--mv-ink);
+  transition:
+    border-color 150ms var(--mv-ease-saida),
+    color 150ms var(--mv-ease-saida);
+}
+.mv-botao-fio:hover {
+  border-color: var(--acento-ink);
+  color: var(--acento-ink);
+  transition-duration: 0ms;
+}
+
+/* ── carimbo ───────────────────────────────────────────────────────────── */
+
+.mv-inicio__carimbo {
+  margin-top: var(--mv-e-9);
+  padding-top: var(--mv-e-4);
+  border-top: 1px solid var(--mv-linha-fina);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+
+/* ── responsivo ────────────────────────────────────────────────────────
+   Três paradas verificadas: 1440, 768 e 375. Nada rola de lado no body. */
+
+@media (max-width: 1080px) {
+  .mv-secao__cabeca { grid-template-columns: minmax(0, 1fr); }
+  .mv-registro { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--mv-e-5) 0; }
+  .mv-registro__item:nth-child(odd) { padding-left: 0; }
+  .mv-registro__item:nth-child(odd) { border-left: none; }
+}
+
+@media (max-width: 860px) {
+  .mv-caminhos { grid-template-columns: minmax(0, 1fr); gap: var(--mv-e-4); }
+  .mv-caminho { margin-right: 0; }
+  .mv-caminho + .mv-caminho {
+    border-left: none;
+    border-top: 1px solid var(--mv-linha-fina);
+    border-radius: var(--mv-r-md);
+    padding-top: var(--mv-e-6);
+  }
+}
+
+@media (max-width: 640px) {
+  .mv-inicio { padding: var(--mv-e-5) var(--mv-e-4) var(--mv-e-8); }
+  .mv-heroi { padding: var(--mv-e-4) 0 var(--mv-e-6); }
+  .mv-heroi__titulo { max-width: 100%; }
+
+  .mv-heroi__busca {
+    flex-wrap: wrap;
+    padding: var(--mv-e-2) var(--mv-e-3);
+    row-gap: var(--mv-e-2);
+  }
+  .mv-heroi__busca input { flex: 1 1 8rem; }
+  .mv-heroi__ir { flex: 1 0 100%; }
+
+  .mv-registro { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .mv-registro__item {
+    padding: var(--mv-e-4) 0;
+    border-left: none;
+  }
+  .mv-registro__item + .mv-registro__item {
+    border-left: none;
+    border-top: 1px solid var(--mv-linha-fina);
+  }
+
+  .mv-secao { margin-top: var(--mv-e-8); }
+
+  .mv-disc__link {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: var(--mv-e-3);
+    align-items: start;
+  }
+  .mv-disc__seta { display: none; }
+  .mv-disc__quanto { flex-direction: column; align-items: flex-end; gap: 2px; }
+  .mv-disc__desc { font-size: 0.9375rem; }
+
+  .mv-tipos { column-gap: 0; }
+}
+
+@media (max-width: 400px) {
+  .mv-disc__nome { font-size: var(--mv-t-md); }
+  .mv-disc__total { font-size: var(--mv-t-md); }
+}

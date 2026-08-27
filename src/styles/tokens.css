@@ -1,0 +1,228 @@
+/* ============================================================================
+   MedVault — tokens de design
+   ============================================================================
+   FONTE ÚNICA DA VERDADE. Nenhum componente escreve hex, px de fonte, duração
+   de animação ou sombra na mão. Se você precisa de um valor que não está aqui,
+   o valor certo é adicionar o token — não burlar.
+
+   A tese cromática
+   ----------------
+   Pastel fracassa quando é tratado como uma cor. Aqui pastel é sempre a TINTA
+   CLARA de um pigmento de verdade. Cada disciplina carrega um trio:
+
+     --ink    pigmento saturado e escuro  → texto, bordas, ícones (passa AA)
+     --tint   a lavagem pastel             → fundos, chips, estados
+     --glow   halo translúcido             → brilho, foco, profundidade
+
+   Isso deixa a interface pastel sem ficar débil: o contraste vem do ink, a
+   suavidade vem do tint. Pastel sozinho, sem o pigmento pareado, é o que faz
+   um site parecer amador.
+
+   O fundo é PAPEL QUENTE, nunca branco puro nem cinza-azulado. Branco puro
+   sob pastel deixa o pastel sujo; o cinza-azulado dá ar de painel corporativo.
+   ========================================================================= */
+
+:root {
+  /* ── ground ───────────────────────────────────────────────────────────
+     Papel, não tela. Valores medidos, não estimados: cada razão de
+     contraste abaixo foi calculada, não chutada.                        */
+  --mv-ground-sunk:   #F1ECE3;  /* nav, poços, blocos de código           */
+  --mv-ground:        #FAF8F4;  /* fundo de leitura                       */
+  --mv-ground-raised: #FFFFFF;  /* placas de figura, cards                */
+  --mv-ground-float:  #FFFFFF;  /* modais, popovers                       */
+
+  /* ── ink ──────────────────────────────────────────────────────────────
+     Rampa de 4 degraus, viés quente (matiz ~40–50°) — é o que impede de
+     parecer o "cinza de desenvolvedor" frio.                            */
+  --mv-ink:        #241F1A;  /* títulos, nav ativa   — 15.40:1 no papel   */
+  --mv-ink-body:   #3D3733;  /* corpo de leitura     — 11.04:1            */
+  --mv-ink-muted:  #6B635C;  /* legendas, cabeçalhos —  5.55:1  AA        */
+  --mv-ink-faint:  #8C837B;  /* metadados            —  3.51:1  ≥18.66px  */
+  --mv-ink-invert: #FAF8F4;
+
+  /* ── traços ───────────────────────────────────────────────────────── */
+  --mv-linha-fina:  #E7E1D7;  /* fio de divisória      1.23:1 */
+  --mv-linha:       #D6CDBF;  /* régua de seção        1.48:1 */
+  --mv-linha-forte: #BDB2A1;  /* ênfase                1.97:1 */
+
+  /* ── acentos de disciplina ────────────────────────────────────────────
+     Famílias travadas por matiz, geradas em OKLCH com ajuste de gamut por
+     busca binária, então o hex bate exatamente com o OKLCH declarado:
+
+       ink  = oklch(0.44 0.125 H)   pale = oklch(0.935 0.038 H)
+       mid  = oklch(0.60 0.150 H)   hair = oklch(0.86  0.055 H)
+
+     Os 11 `ink` caem entre 7.02:1 e 7.86:1 no papel — passam AAA e têm
+     peso perceptual igual, então nenhuma disciplina grita mais alto que
+     outra. Essa uniformidade é o que separa paleta projetada de paleta
+     escolhida a dedo.
+
+     TRÊS REGRAS QUE OS NÚMEROS IMPÕEM:
+     1. `mid` dá 3.73–4.26:1 no branco. Serve para ícone, marca de gráfico
+        e barra de 3px (WCAG 1.4.11 pede ≥3:1) — mas REPROVA no limiar de
+        4.5:1 de texto. `mid` NUNCA carrega texto. Texto usa `ink`.
+     2. `--mv-ink-body` sobre qualquer `pale` dá 9.55–9.81:1, então bloco
+        de callout tintado é seguro.
+     3. COR NUNCA É O ÚNICO CANAL. Simulação de deuteranopia mostra
+        petroleo e eucalipto colapsando um no outro (distância OKLab de
+        0.051, no limiar da discriminação). Todo chip de disciplina
+        precisa de glifo E rótulo de texto, e a nav não pode pôr matizes
+        vizinhas em sequência vertical.                                   */
+
+  --mv-coral-ink:     #8A2F32;  --mv-coral-mid:     #CA5556;  --mv-coral-tint:     #FFE2E0;  --mv-coral-hair:     #F3C4C1;  --mv-coral-glow:     #8A2F3221;
+  --mv-rosa-ink:      #832F5A;  --mv-rosa-mid:      #C1558A;  --mv-rosa-tint:      #FFE0EC;  --mv-rosa-hair:      #EFC3D5;  --mv-rosa-glow:      #832F5A21;
+  --mv-ametista-ink:  #70377D;  --mv-ametista-mid:  #A75FB7;  --mv-ametista-tint:  #F5E2FA;  --mv-ametista-hair:  #E2C6E8;  --mv-ametista-glow:  #70377D21;
+  --mv-lavanda-ink:   #564291;  --mv-lavanda-mid:   #846CD1;  --mv-lavanda-tint:   #E9E6FE;  --mv-lavanda-hair:   #D1CBF3;  --mv-lavanda-glow:   #56429121;
+  --mv-anil-ink:      #2A4F96;  --mv-anil-mid:      #4C7DD9;  --mv-anil-tint:      #DEEAFF;  --mv-anil-hair:      #BED2F6;  --mv-anil-glow:      #2A4F9621;
+  --mv-petroleo-ink:  #005A7B;  --mv-petroleo-mid:  #028CBC;  --mv-petroleo-tint:  #D1EFFF;  --mv-petroleo-hair:  #AED8EF;  --mv-petroleo-glow:  #005A7B21;
+  --mv-eucalipto-ink: #01614D;  --mv-eucalipto-mid: #029678;  --mv-eucalipto-tint: #D1F2E7;  --mv-eucalipto-hair: #ADDDCD;  --mv-eucalipto-glow: #01614D21;
+  --mv-musgo-ink:     #375F00;  --mv-musgo-mid:     #5D9222;  --mv-musgo-tint:     #E0EFD5;  --mv-musgo-hair:     #C4D9B4;  --mv-musgo-glow:     #375F0021;
+  --mv-areia-ink:     #674F00;  --mv-areia-mid:     #9F7B00;  --mv-areia-tint:     #F4E9CD;  --mv-areia-hair:     #E0D0A8;  --mv-areia-glow:     #674F0021;
+  --mv-argila-ink:    #823C00;  --mv-argila-mid:    #C3610D;  --mv-argila-tint:    #FFE3D3;  --mv-argila-hair:    #EFC8B1;  --mv-argila-glow:    #823C0021;
+  --mv-neutro-ink:    #6B635C;  --mv-neutro-mid:    #8C837B;  --mv-neutro-tint:    #F1ECE3;  --mv-neutro-hair:    #D6CDBF;  --mv-neutro-glow:    #6B635C21;
+
+  /* Acento ativo. `data-acento` em qualquer container reescreve os cinco,
+     e toda a subárvore segue junto sem prop drilling. É o mecanismo de
+     tematização da Stripe Press, adotado literalmente. */
+  --acento-ink:  var(--mv-eucalipto-ink);
+  --acento-mid:  var(--mv-eucalipto-mid);
+  --acento-tint: var(--mv-eucalipto-tint);
+  --acento-hair: var(--mv-eucalipto-hair);
+  --acento-glow: var(--mv-eucalipto-glow);
+
+  /* ── semântico ────────────────────────────────────────────────────── */
+  --mv-ok-ink:    #0F6A31;  --mv-ok-tint:    #DCF0E2;
+  --mv-aviso-ink: #8A5601;  --mv-aviso-tint: #F8E9CC;
+  --mv-erro-ink:  #A12628;  --mv-erro-tint:  #FCE1E0;
+  --mv-info-ink:  #015E8C;  --mv-info-tint:  #D8EEFB;
+  --mv-link:      #005799;
+  --mv-link-lido: #614092;
+  --mv-foco:      #1289E7;
+
+  /* ── tipografia ───────────────────────────────────────────────────────
+     Três famílias, cada uma com um trabalho. Sem sobreposição.
+
+       Fraunces   display — variável, com eixo óptico e "wonk". Dá caráter
+                  editorial sem parecer uma fonte de sistema.
+       Newsreader leitura — desenhada pra texto longo em tela. Altura-x alta,
+                  serifas que aguentam corpo pequeno.
+       Inter      interface — nav, rótulos, botões, números.               */
+
+  --mv-fonte-display: "Fraunces", "Playfair Display", Georgia, serif;
+  --mv-fonte-leitura: "Newsreader", "Source Serif 4", Charter, Georgia, serif;
+  --mv-fonte-ui: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --mv-fonte-mono: "JetBrains Mono", "SF Mono", ui-monospace, Menlo, monospace;
+
+  /* Escala tipográfica — razão 1.25 (terça maior), ancorada em 16px.
+     Fluida entre 380px e 1400px de viewport, então nada quebra no celular. */
+  --mv-t-xs:   0.75rem;    /* 12px — selo, sobrelinha                */
+  --mv-t-sm:   0.875rem;   /* 14px — metadado, rótulo de nav         */
+  --mv-t-base: 1rem;       /* 16px — corpo de UI                     */
+  --mv-t-md:   1.125rem;   /* 18px — leitura no celular              */
+  --mv-t-lg:   clamp(1.1875rem, 0.4vw + 1.09rem, 1.3125rem);  /* corpo de leitura */
+  --mv-t-xl:   clamp(1.5rem, 1vw + 1.25rem, 1.875rem);        /* h3 */
+  --mv-t-2xl:  clamp(1.875rem, 1.8vw + 1.4rem, 2.5rem);       /* h2 */
+  --mv-t-3xl:  clamp(2.25rem, 3vw + 1.5rem, 3.5rem);          /* h1 */
+  --mv-t-4xl:  clamp(2.75rem, 5.5vw + 1.25rem, 5.5rem);       /* display herói */
+
+  --mv-lh-apertado: 1.08;  /* display grande */
+  --mv-lh-titulo:   1.22;  /* h1–h3 */
+  --mv-lh-normal:   1.5;   /* UI */
+  --mv-lh-leitura:  1.68;  /* corpo longo — o valor que decide se cansa */
+
+  --mv-ls-display: -0.022em;  /* display grande precisa apertar */
+  --mv-ls-titulo:  -0.012em;
+  --mv-ls-normal:  0;
+  --mv-ls-larga:   0.08em;    /* sobrelinha em caixa alta */
+
+  /* Medida: 62–68 caracteres. Acima de ~75 o olho perde a linha na volta;
+     é a causa nº1 de "cansa só de olhar" em página de texto longo. */
+  --mv-medida: 34rem;
+  --mv-medida-larga: 46rem;  /* tabelas e figuras podem extravasar */
+
+  /* ── espaçamento — escala de 4px ──────────────────────────────────── */
+  --mv-e-1: 0.25rem;  --mv-e-2: 0.5rem;   --mv-e-3: 0.75rem;
+  --mv-e-4: 1rem;     --mv-e-5: 1.5rem;   --mv-e-6: 2rem;
+  --mv-e-7: 3rem;     --mv-e-8: 4rem;     --mv-e-9: 6rem;
+  --mv-e-10: 8rem;    --mv-e-11: 12rem;
+
+  /* ── raio ─────────────────────────────────────────────────────────── */
+  --mv-r-sm: 6px;  --mv-r-md: 10px;  --mv-r-lg: 16px;
+  --mv-r-xl: 24px; --mv-r-full: 999px;
+
+  /* ── elevação ─────────────────────────────────────────────────────────
+     Sombras QUENTES, com matiz. Sombra cinza sobre papel quente parece
+     sujeira. Cada nível empilha um contato curto e um difuso longo.      */
+  --mv-sombra-sm:
+    0 1px 2px rgba(74, 59, 42, 0.05),
+    0 1px 3px rgba(74, 59, 42, 0.04);
+  --mv-sombra-md:
+    0 2px 4px rgba(74, 59, 42, 0.05),
+    0 4px 12px rgba(74, 59, 42, 0.06);
+  --mv-sombra-lg:
+    0 4px 8px rgba(74, 59, 42, 0.05),
+    0 12px 28px rgba(74, 59, 42, 0.08);
+  --mv-sombra-xl:
+    0 8px 16px rgba(74, 59, 42, 0.06),
+    0 24px 56px rgba(74, 59, 42, 0.10);
+  --mv-sombra-acento: 0 8px 28px var(--acento-glow);
+
+  /* ── movimento ────────────────────────────────────────────────────────
+     Duas regras que separam movimento de elite de movimento amador:
+       1. Nada acima de 420ms, exceto transição de página deliberada.
+       2. Curva assimétrica — entra rápido, assenta devagar. Ease-in-out
+          simétrico é o que faz uma interface parecer lenta e barata.     */
+  --mv-d-instant: 90ms;
+  --mv-d-rapido:  160ms;
+  --mv-d-medio:   260ms;
+  --mv-d-lento:   420ms;
+  --mv-d-cena:    720ms;   /* só troca de página / entrada do herói */
+
+  --mv-ease-saida:  cubic-bezier(0.32, 0.72, 0, 1);      /* padrão — decelera forte */
+  --mv-ease-entra:  cubic-bezier(0.4, 0, 1, 1);
+  --mv-ease-suave:  cubic-bezier(0.65, 0, 0.35, 1);
+  --mv-ease-mola:   cubic-bezier(0.34, 1.56, 0.64, 1);   /* só micro-interação */
+
+  /* ── layout ───────────────────────────────────────────────────────── */
+  --mv-nav-largura: 288px;
+  --mv-nav-largura-recolhida: 72px;
+  --mv-sumario-largura: 300px;
+  --mv-topo-altura: 64px;
+  --mv-conteudo-max: 1440px;
+
+  /* ── z-index — nomeado, nunca número solto ────────────────────────── */
+  --mv-z-base: 0;      --mv-z-elevado: 10;   --mv-z-grudento: 100;
+  --mv-z-nav: 200;     --mv-z-sobreposicao: 300;
+  --mv-z-modal: 400;   --mv-z-brinde: 500;
+}
+
+/* ── acessibilidade: respeitar redução de movimento ────────────────────
+   Não é enfeite. Movimento vestibular provoca náusea de verdade em quem
+   tem sensibilidade, e o site inteiro depende de animação.              */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --mv-d-instant: 1ms; --mv-d-rapido: 1ms; --mv-d-medio: 1ms;
+    --mv-d-lento: 1ms;   --mv-d-cena: 1ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── classes utilitárias de acento ─────────────────────────────────────
+   Colar data-acento="anil" em qualquer container reescreve o trio pra
+   toda a subárvore. É assim que a página de disciplina se recolore.     */
+[data-acento="coral"]     { --acento-ink: var(--mv-coral-ink);     --acento-mid: var(--mv-coral-mid);     --acento-tint: var(--mv-coral-tint);     --acento-hair: var(--mv-coral-hair);     --acento-glow: var(--mv-coral-glow); }
+[data-acento="rosa"]      { --acento-ink: var(--mv-rosa-ink);      --acento-mid: var(--mv-rosa-mid);      --acento-tint: var(--mv-rosa-tint);      --acento-hair: var(--mv-rosa-hair);      --acento-glow: var(--mv-rosa-glow); }
+[data-acento="ametista"]  { --acento-ink: var(--mv-ametista-ink);  --acento-mid: var(--mv-ametista-mid);  --acento-tint: var(--mv-ametista-tint);  --acento-hair: var(--mv-ametista-hair);  --acento-glow: var(--mv-ametista-glow); }
+[data-acento="lavanda"]   { --acento-ink: var(--mv-lavanda-ink);   --acento-mid: var(--mv-lavanda-mid);   --acento-tint: var(--mv-lavanda-tint);   --acento-hair: var(--mv-lavanda-hair);   --acento-glow: var(--mv-lavanda-glow); }
+[data-acento="anil"]      { --acento-ink: var(--mv-anil-ink);      --acento-mid: var(--mv-anil-mid);      --acento-tint: var(--mv-anil-tint);      --acento-hair: var(--mv-anil-hair);      --acento-glow: var(--mv-anil-glow); }
+[data-acento="petroleo"]  { --acento-ink: var(--mv-petroleo-ink);  --acento-mid: var(--mv-petroleo-mid);  --acento-tint: var(--mv-petroleo-tint);  --acento-hair: var(--mv-petroleo-hair);  --acento-glow: var(--mv-petroleo-glow); }
+[data-acento="eucalipto"] { --acento-ink: var(--mv-eucalipto-ink); --acento-mid: var(--mv-eucalipto-mid); --acento-tint: var(--mv-eucalipto-tint); --acento-hair: var(--mv-eucalipto-hair); --acento-glow: var(--mv-eucalipto-glow); }
+[data-acento="musgo"]     { --acento-ink: var(--mv-musgo-ink);     --acento-mid: var(--mv-musgo-mid);     --acento-tint: var(--mv-musgo-tint);     --acento-hair: var(--mv-musgo-hair);     --acento-glow: var(--mv-musgo-glow); }
+[data-acento="areia"]     { --acento-ink: var(--mv-areia-ink);     --acento-mid: var(--mv-areia-mid);     --acento-tint: var(--mv-areia-tint);     --acento-hair: var(--mv-areia-hair);     --acento-glow: var(--mv-areia-glow); }
+[data-acento="argila"]    { --acento-ink: var(--mv-argila-ink);    --acento-mid: var(--mv-argila-mid);    --acento-tint: var(--mv-argila-tint);    --acento-hair: var(--mv-argila-hair);    --acento-glow: var(--mv-argila-glow); }
+[data-acento="neutro"]    { --acento-ink: var(--mv-neutro-ink);    --acento-mid: var(--mv-neutro-mid);    --acento-tint: var(--mv-neutro-tint);    --acento-hair: var(--mv-neutro-hair);    --acento-glow: var(--mv-neutro-glow); }

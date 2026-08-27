@@ -1,0 +1,210 @@
+/* Volume — fascículo de atlas em CSS 3D. */
+
+.mv-vol {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-4);
+  padding: var(--mv-e-3);
+  border-radius: var(--mv-r-lg);
+  transition: background var(--mv-d-medio) var(--mv-ease-saida);
+}
+.mv-vol:hover { background: color-mix(in srgb, var(--acento-tint) 40%, transparent); }
+
+/* O palco dá a perspectiva. Perspectiva no pai e não no objeto: assim vários
+   volumes lado a lado compartilham o mesmo ponto de fuga e a fileira parece
+   uma cena, não 11 objetos independentes. */
+.mv-vol__palco {
+  display: grid;
+  place-items: center;
+  /* 1400px era perspectiva quase ortográfica num objeto de 158px — o volume
+     lia como cartão chapado e a mecânica inteira se perdia. 720px dá a
+     convergência que faz o olho aceitar como objeto. */
+  perspective: 720px;
+  perspective-origin: 62% 40%;
+  padding: var(--mv-e-5) 0 var(--mv-e-4);
+}
+
+.mv-vol__corpo {
+  position: relative;
+  display: block;
+  width: 158px;
+  height: 214px;
+  transform-style: preserve-3d;
+  /* Repouso girado o bastante para a lombada aparecer, e inclinado no X para
+     o olho ler volume em vez de losango. */
+  transform:
+    rotateX(calc(4deg + var(--incl-x, 0deg)))
+    rotateY(calc(-26deg + var(--incl-y, 0deg)));
+  transition: transform var(--mv-d-lento) var(--mv-ease-saida);
+  will-change: transform;
+}
+.mv-vol:hover .mv-vol__corpo { transition-duration: 0ms; }
+
+.mv-vol__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 3px 5px 5px 3px;
+  backface-visibility: hidden;
+}
+
+/* Capa: papel do acento, bem lavado, com a textura de fibra sugerida por um
+   gradiente sutil. Nada de brilho — fascículo não é capa dura. */
+.mv-vol__face--capa {
+  background:
+    linear-gradient(118deg,
+      color-mix(in srgb, var(--acento-tint) 88%, #fff) 0%,
+      var(--acento-tint) 46%,
+      color-mix(in srgb, var(--acento-tint) 78%, var(--acento-hair)) 100%);
+  border: 1px solid var(--acento-hair);
+  border-left-width: 3px;
+  border-left-color: var(--acento-ink);
+  box-shadow: var(--mv-sombra-md);
+  transform: translateZ(calc(var(--lombada) / 2));
+  padding: var(--mv-e-5) var(--mv-e-3) var(--mv-e-4) var(--mv-e-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* A etiqueta ocupa a capa inteira, com o nome centralizado no eixo vertical —
+   é como uma prancha de atlas distribui a legenda de capa. Antes o conteúdo
+   se amontoava no topo e sobrava um vazio grande embaixo. */
+.mv-vol__etiqueta {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-2);
+  justify-content: center;
+}
+
+.mv-vol__periodo {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  color: var(--acento-ink);
+  opacity: 0.72;
+}
+
+.mv-vol__regua { width: 26px; height: 2px; background: var(--acento-ink); }
+
+.mv-vol__nome {
+  font-family: var(--mv-fonte-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  line-height: 1.16;
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--acento-ink);
+  text-wrap: balance;
+}
+
+/* Contagem no pé da capa, separada por um fio — colofão de prancha. */
+.mv-vol__n {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--acento-ink);
+  opacity: 0.66;
+  padding-top: var(--mv-e-2);
+  border-top: 1px solid color-mix(in srgb, var(--acento-ink) 26%, transparent);
+  margin-top: auto;
+}
+
+/* Costura: três pontos no vinco. É o detalhe que diz "fascículo" em vez de
+   "cartão com sombra". */
+.mv-vol__costura {
+  position: absolute;
+  left: 9px; top: 26%;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.mv-vol__costura i {
+  width: 3px; height: 3px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+  opacity: 0.42;
+}
+
+/* Lombada, na profundidade da capa. */
+.mv-vol__face--lombada {
+  width: var(--lombada);
+  left: 0;
+  background: linear-gradient(
+    to right,
+    color-mix(in srgb, var(--acento-ink) 82%, #000),
+    var(--acento-ink) 42%,
+    color-mix(in srgb, var(--acento-ink) 84%, #000));
+  transform: rotateY(-90deg);
+  transform-origin: left center;
+  border-radius: 3px 0 0 3px;
+}
+
+/* Miolo: folhas empilhadas na borda direita. Creme, não branco. */
+.mv-vol__folhas {
+  position: absolute;
+  top: 3px; bottom: 3px; right: 0;
+  width: var(--lombada);
+  background: repeating-linear-gradient(
+    to right,
+    #F6F1E6 0px, #F6F1E6 1px,
+    #E9E1D2 1px, #E9E1D2 2px);
+  transform: rotateY(90deg);
+  transform-origin: right center;
+  border-radius: 0 4px 4px 0;
+}
+
+/* ── legenda ───────────────────────────────────────────────────────────── */
+
+.mv-vol__legenda { display: flex; flex-direction: column; gap: var(--mv-e-2); }
+
+.mv-vol__legenda-topo { display: flex; align-items: center; gap: var(--mv-e-2); }
+
+/* Ponto de pigmento + rótulo. Cor NUNCA sozinha — petroleo e eucalipto
+   colapsam em deuteranopia. */
+.mv-vol__ponto {
+  width: 7px; height: 7px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+  flex: none;
+}
+
+.mv-vol__legenda-nome {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-vol__legenda-desc {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--mv-ink-muted);
+}
+
+.mv-vol__tipos { display: flex; flex-wrap: wrap; gap: var(--mv-e-3); margin-top: 2px; }
+.mv-vol__tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+.mv-vol__tipo svg { color: var(--acento-mid); }
+
+/* ── movimento reduzido ────────────────────────────────────────────────
+   A Stripe Press simplesmente ignora isto. Nós não: sem movimento o volume
+   vira uma placa plana de frente, e a página continua boa. */
+@media (prefers-reduced-motion: reduce) {
+  .mv-vol__palco { perspective: none; }
+  .mv-vol__corpo { transform: none !important; }
+  .mv-vol__face--lombada, .mv-vol__folhas { display: none; }
+  .mv-vol__face--capa { transform: none; }
+}
+
+@media (max-width: 640px) {
+  .mv-vol__corpo { width: 132px; height: 178px; }
+  .mv-vol__palco { padding: var(--mv-e-4) 0; }
+}

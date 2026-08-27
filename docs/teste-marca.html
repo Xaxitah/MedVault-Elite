@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>MedVault — prova de fogo da marca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;450;500;600&family=Newsreader:opsz,ital,wght@6..72,0,400;6..72,1,400&display=swap" />
+<link rel="stylesheet" href="../src/styles/tokens.css" />
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; padding: var(--mv-e-8) var(--mv-e-6) var(--mv-e-10);
+    background: var(--mv-ground); color: var(--mv-ink-body);
+    font-family: var(--mv-fonte-ui); font-size: var(--mv-t-base);
+    -webkit-font-smoothing: antialiased;
+  }
+  .env { max-width: 1100px; margin: 0 auto; }
+
+  h1 {
+    font-family: var(--mv-fonte-display); font-weight: 600;
+    font-size: var(--mv-t-2xl); letter-spacing: var(--mv-ls-titulo);
+    color: var(--mv-ink); margin: 0 0 var(--mv-e-2);
+  }
+  .subtitulo { font-family: var(--mv-fonte-leitura); font-size: 1.0625rem; color: var(--mv-ink-muted); margin: 0 0 var(--mv-e-8); max-width: 44rem; }
+
+  h2 {
+    font-family: var(--mv-fonte-ui); font-size: var(--mv-t-xs); font-weight: 600;
+    letter-spacing: var(--mv-ls-larga); text-transform: uppercase;
+    color: var(--mv-ink-muted); margin: var(--mv-e-9) 0 var(--mv-e-5);
+    padding-bottom: var(--mv-e-3); border-bottom: 1px solid var(--mv-linha);
+  }
+  h2 span { color: var(--mv-ink-faint); font-weight: 450; letter-spacing: 0.04em; text-transform: none; margin-left: var(--mv-e-3); }
+
+  .nota { font-family: var(--mv-fonte-leitura); font-size: 0.9375rem; color: var(--mv-ink-muted); max-width: 40rem; margin: 0 0 var(--mv-e-6); }
+
+  /* ── vitrine das direções ─────────────────────────────────────── */
+  .direcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--mv-e-7); }
+  .direcao__palco {
+    display: flex; align-items: center; justify-content: center;
+    height: 190px; background: var(--mv-ground-raised);
+    border: 1px solid var(--mv-linha-fina);
+    color: var(--mv-ink);
+  }
+  .direcao__nome {
+    font-family: var(--mv-fonte-display); font-weight: 600; font-size: 1.125rem;
+    color: var(--mv-ink); margin: var(--mv-e-4) 0 var(--mv-e-1);
+  }
+  .direcao__nome b { font-family: var(--mv-fonte-ui); font-size: var(--mv-t-xs); font-weight: 600; letter-spacing: var(--mv-ls-larga); color: var(--acento-ink); display: block; margin-bottom: 4px; }
+  .direcao__conceito { font-family: var(--mv-fonte-leitura); font-size: 0.9375rem; line-height: 1.55; color: var(--mv-ink-muted); margin: 0; }
+
+  /* ── escala ───────────────────────────────────────────────────── */
+  .escala { display: flex; flex-direction: column; gap: var(--mv-e-5); }
+  .escala__linha { display: flex; align-items: flex-end; gap: var(--mv-e-7); padding: var(--mv-e-5) var(--mv-e-6); background: var(--mv-ground-raised); border: 1px solid var(--mv-linha-fina); color: var(--mv-ink); }
+  .escala__rotulo { font-size: var(--mv-t-xs); font-weight: 600; letter-spacing: var(--mv-ls-larga); text-transform: uppercase; color: var(--mv-ink-faint); width: 8.5rem; flex: none; padding-bottom: 2px; }
+  .amostra { display: flex; flex-direction: column; align-items: center; gap: var(--mv-e-2); }
+  .amostra small { font-family: var(--mv-fonte-mono); font-size: 11px; color: var(--mv-ink-faint); }
+
+  /* ── monocromático ────────────────────────────────────────────── */
+  .mono { background: #fff; color: #000; --acento-ink: #000; padding: var(--mv-e-6); border: 1px solid var(--mv-linha); }
+  .mono .escala__linha { background: #fff; border-color: #ddd; color: #000; }
+  .mono .escala__rotulo { color: #555; }
+  .mono .amostra small { color: #666; }
+
+  /* ── conjunto com a palavra ───────────────────────────────────── */
+  .conjuntos { display: flex; flex-wrap: wrap; gap: var(--mv-e-8); align-items: flex-end; }
+  .conjunto { display: flex; align-items: center; gap: var(--mv-e-3); color: var(--mv-ink); }
+  .conjunto__texto { display: flex; flex-direction: column; line-height: 1.15; font-family: var(--mv-fonte-display); font-weight: 600; letter-spacing: var(--mv-ls-titulo); color: var(--mv-ink); }
+  .conjunto__texto em { font-family: var(--mv-fonte-ui); font-weight: 500; font-style: normal; letter-spacing: 0.02em; color: var(--mv-ink-faint); margin-top: 3px; }
+  .conjunto--shell .conjunto__texto { font-size: 1.0625rem; }
+  .conjunto--shell .conjunto__texto em { font-size: 0.6875rem; }
+  .conjunto--medio .conjunto__texto { font-size: 1.75rem; }
+  .conjunto--medio .conjunto__texto em { font-size: 0.8125rem; }
+  .conjunto--grande { gap: var(--mv-e-5); }
+  .conjunto--grande .conjunto__texto { font-size: 3.25rem; letter-spacing: -0.02em; }
+  .conjunto--grande .conjunto__texto em { font-size: 1rem; margin-top: 8px; }
+
+  /* ── aba do navegador ─────────────────────────────────────────── */
+  .navegador { background: #DEDBD5; padding: 10px 10px 0; border-radius: 10px 10px 0 0; max-width: 720px; border: 1px solid var(--mv-linha); border-bottom: 0; }
+  .abas { display: flex; gap: 4px; align-items: flex-end; }
+  .aba { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: #F4F1EB; border-radius: 8px 8px 0 0; font-size: 12px; color: #4a4340; white-space: nowrap; }
+  .aba--inativa { background: #E6E2DB; color: #7c736c; }
+  .aba svg { flex: none; }
+  .aba__ponto { width: 16px; height: 16px; border-radius: 3px; background: #cfcac2; flex: none; }
+  .barra-url { margin-top: 10px; background: #F4F1EB; padding: 8px 12px; font-size: 12px; color: #7c736c; font-family: var(--mv-fonte-mono); }
+
+  /* ── pigmentos ────────────────────────────────────────────────── */
+  .pigmentos { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 2px; background: var(--mv-linha-fina); border: 1px solid var(--mv-linha-fina); }
+  .pigmento { display: flex; flex-direction: column; align-items: center; gap: var(--mv-e-2); padding: var(--mv-e-4) var(--mv-e-2); background: var(--mv-ground-sunk); color: var(--mv-ink); }
+  .pigmento small { font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mv-ink-faint); }
+
+  .nav-simulada { background: var(--mv-ground-sunk); border: 1px solid var(--mv-linha-fina); border-right-width: 1px; width: 288px; padding: var(--mv-e-5) var(--mv-e-4); }
+
+  .par { display: grid; grid-template-columns: 1fr 1fr; gap: var(--mv-e-6); }
+  @media (max-width: 860px) { .direcoes, .par { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="env">
+
+  <h1>MedVault — prova de fogo da marca</h1>
+  <p class="subtitulo">Três direções desenhadas de verdade, submetidas aos quatro testes que matam
+  90% das logos: escala, monocromia, convívio com a palavra, e a aba do navegador.</p>
+
+  <h2>As três direções <span>96 px, tinta sobre placa</span></h2>
+  <div class="direcoes" id="vitrine"></div>
+
+  <h2>Prova 1 — escala <span>16 · 24 · 34 (tamanho do Shell) · 96</span></h2>
+  <p class="nota">O 16 px é o assassino. Qualquer coisa com mais de cinco primitivas ou vãos
+  menores que 2 px vira mancha.</p>
+  <div class="escala" id="escala"></div>
+
+  <h2>Prova 2 — preto puro sobre branco <span>sem cor nenhuma</span></h2>
+  <div class="mono">
+    <div class="escala" id="escala-mono"></div>
+  </div>
+
+  <h2>Prova 3 — ao lado da palavra <span>Fraunces 600, como o Shell usa</span></h2>
+  <div class="conjuntos" id="conjuntos"></div>
+
+  <h2>Prova 4 — a aba do navegador <span>16 px, ao lado de abas concorrentes</span></h2>
+  <div class="navegador">
+    <div class="abas" id="abas">
+      <div class="aba aba--inativa"><span class="aba__ponto"></span>Anatomía — UP</div>
+      <div class="aba" id="aba-viva"></div>
+      <div class="aba aba--inativa"><span class="aba__ponto"></span>Drive</div>
+    </div>
+    <div class="barra-url">localhost:5180/disciplina/anatomia</div>
+  </div>
+
+  <h2>Prova 5 — no fundo da nav, com os 11 pigmentos <span>a chave assume a disciplina</span></h2>
+  <div class="par" style="align-items:start">
+    <div class="nav-simulada">
+      <div class="conjunto conjunto--shell" id="nav-conjunto"></div>
+    </div>
+    <div class="pigmentos" id="pigmentos"></div>
+  </div>
+
+</div>
+
+<script>
+/* Cada direção é uma função (tamanho) → string de SVG. Tudo em currentColor,
+   menos o acento, que sai de --acento-ink para poder recolorir por contexto. */
+const DIRECOES = {
+  abobada: {
+    nome: "A Abóbada",
+    tag: "Direção A",
+    conceito: "Vault é abóbada: a craniana, que guarda o cérebro; e a da biblioteca, que guarda o acervo. Arquivoltas concêntricas sobre um plinto — o fio de seção do site.",
+    svg: (t) => `<svg width="${t}" height="${t}" viewBox="0 0 32 32" fill="none" role="img" aria-label="MedVault">
+      <path d="M1.5 27.6H30.5" stroke="currentColor" stroke-width="2.4"/>
+      <path d="M4 27.5V17A12 12 0 0 1 28 17V27.5" stroke="currentColor" stroke-width="2.1"/>
+      <path d="M10 27.5V17A6 6 0 0 1 22 17V27.5" stroke="currentColor" stroke-width="2.1"/>
+      <path d="M13.9 3.95H18.1L17.5 10H14.5Z" fill="var(--acento-ink)"/>
+    </svg>`
+  },
+  estante: {
+    nome: "A Estante",
+    tag: "Direção B",
+    conceito: "Volumes de pé sobre a prateleira, um deles tombado. Guardar conhecimento no sentido mais literal; alturas irregulares para não virar gráfico de barras.",
+    svg: (t) => `<svg width="${t}" height="${t}" viewBox="0 0 32 32" fill="none" role="img" aria-label="MedVault">
+      <path d="M2 27.6H30" stroke="currentColor" stroke-width="2.4"/>
+      <g stroke="currentColor" stroke-width="2.5">
+        <path d="M6.7 26.6V11.5"/>
+        <path d="M17.5 26.6V13.5"/>
+        <path d="M23.4 26.6L25.6 8.5"/>
+      </g>
+      <path d="M12.1 26.6V5.5" stroke="var(--acento-ink)" stroke-width="2.5"/>
+    </svg>`
+  },
+  monograma: {
+    nome: "O Monograma",
+    tag: "Direção C",
+    conceito: "Ligadura MV: o V de Vault é, por construção, o miolo do M de Med. Um colofão de editora — sem caixa, sem contêiner, só a letra.",
+    svg: (t) => `<svg width="${t}" height="${t}" viewBox="0 0 32 32" fill="none" role="img" aria-label="MedVault">
+      <g stroke="currentColor" stroke-width="2.6">
+        <path d="M4.6 26.4V6.4"/>
+        <path d="M27.4 26.4V6.4"/>
+      </g>
+      <path d="M4.6 6.4L16 26.4L27.4 6.4" stroke="var(--acento-ink)" stroke-width="2.6" stroke-linejoin="round"/>
+    </svg>`
+  }
+};
+
+const chaves = Object.keys(DIRECOES);
+
+/* vitrine */
+document.getElementById("vitrine").innerHTML = chaves.map((k) => {
+  const d = DIRECOES[k];
+  return `<div class="direcao">
+    <div class="direcao__palco">${d.svg(96)}</div>
+    <p class="direcao__nome"><b>${d.tag}</b>${d.nome}</p>
+    <p class="direcao__conceito">${d.conceito}</p>
+  </div>`;
+}).join("");
+
+/* escala */
+const tamanhos = [16, 24, 34, 96];
+const linhaEscala = (k) => {
+  const d = DIRECOES[k];
+  return `<div class="escala__linha">
+    <span class="escala__rotulo">${d.nome}</span>
+    ${tamanhos.map((t) => `<span class="amostra">${d.svg(t)}<small>${t}px</small></span>`).join("")}
+  </div>`;
+};
+document.getElementById("escala").innerHTML = chaves.map(linhaEscala).join("");
+document.getElementById("escala-mono").innerHTML = chaves.map(linhaEscala).join("");
+
+/* conjuntos com a palavra */
+document.getElementById("conjuntos").innerHTML = chaves.map((k) => {
+  const d = DIRECOES[k];
+  return `<div style="display:flex;flex-direction:column;gap:2rem">
+    <div class="conjunto conjunto--shell">${d.svg(34)}
+      <span class="conjunto__texto">MedVault<em>segundo cérebro do grupo</em></span></div>
+    <div class="conjunto conjunto--medio">${d.svg(52)}
+      <span class="conjunto__texto">MedVault<em>segundo cérebro do grupo</em></span></div>
+    <div class="conjunto conjunto--grande">${d.svg(88)}
+      <span class="conjunto__texto">MedVault<em>segundo cérebro do grupo</em></span></div>
+  </div>`;
+}).join("");
+
+/* aba */
+document.getElementById("aba-viva").innerHTML =
+  DIRECOES.abobada.svg(16) + "MedVault — Segundo Cérebro do Grupo";
+
+/* nav + pigmentos */
+document.getElementById("nav-conjunto").innerHTML =
+  DIRECOES.abobada.svg(34) + `<span class="conjunto__texto">MedVault<em>segundo cérebro do grupo</em></span>`;
+
+const PIGMENTOS = ["coral","rosa","ametista","lavanda","anil","petroleo","eucalipto","musgo","areia","argila","neutro"];
+document.getElementById("pigmentos").innerHTML = PIGMENTOS.map((p) =>
+  `<div class="pigmento" data-acento="${p}">${DIRECOES.abobada.svg(34)}<small>${p}</small></div>`
+).join("");
+</script>
+</body>
+</html>

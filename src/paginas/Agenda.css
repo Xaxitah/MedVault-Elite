@@ -1,0 +1,772 @@
+/* ============================================================================
+   Agenda — provas, prazos e entregas do grupo.
+   Linguagem Prancha: o fio antes da caixa, cor como etiqueta de disciplina.
+   ========================================================================= */
+
+.mv-agenda {
+  max-width: var(--mv-conteudo-max);
+  margin: 0 auto;
+  padding: var(--mv-e-8) var(--mv-e-7) var(--mv-e-10);
+}
+
+/* ── cabeçalho e ferramentas ───────────────────────────────────────────── */
+
+.mv-agenda__cabecalho {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--mv-e-4);
+  margin-bottom: var(--mv-e-6);
+}
+
+.mv-agenda__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-3xl);
+  font-weight: 600;
+  line-height: var(--mv-lh-apertado);
+  letter-spacing: var(--mv-ls-display);
+  color: var(--mv-ink);
+  font-variation-settings: "opsz" 100;
+}
+
+.mv-agenda__intro {
+  margin-top: var(--mv-e-3);
+  font-family: var(--mv-fonte-leitura);
+  font-size: var(--mv-t-md);
+  line-height: 1.6;
+  color: var(--mv-ink-muted);
+  max-width: 56ch;
+}
+
+.mv-agenda__ferramentas {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-3);
+  flex-wrap: wrap;
+}
+
+/* Alternância lista/mês. Segmentado, sem sombra. */
+.mv-agenda__vistas {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--mv-ground-sunk);
+  border-radius: var(--mv-r-md);
+}
+
+.mv-agenda__vista {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 0 var(--mv-e-3);
+  border-radius: var(--mv-r-sm);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--mv-ink-muted);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-agenda__vista:hover { color: var(--mv-ink); }
+.mv-agenda__vista[aria-pressed="true"],
+.mv-agenda__vista.esta-ativo {
+  background: var(--mv-ground-raised);
+  color: var(--mv-ink);
+  font-weight: 600;
+  box-shadow: var(--mv-sombra-sm);
+}
+
+.mv-agenda__novo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  min-height: 40px;
+  padding: 0 var(--mv-e-4);
+  border-radius: var(--mv-r-md);
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-agenda__novo:hover { opacity: 0.88; }
+.mv-agenda__novo:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Selo honesto de modo local. Não fingir que salvou no servidor. */
+.mv-agenda__selo,
+.mv-agenda__modo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px var(--mv-e-3);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-full);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 500;
+  color: var(--mv-ink-muted);
+  background: var(--mv-ground-raised);
+}
+.mv-agenda__modo-ponto {
+  width: 6px; height: 6px;
+  border-radius: var(--mv-r-full);
+  background: var(--mv-aviso-ink);
+  flex: none;
+}
+
+/* É o PARÁGRAFO de introdução, não uma régua.
+   Eu li "linha-fina" no nome da classe e estilizei como divisória de um fio —
+   `height: 1px` espremia a frase inteira em um pixel, e só a primeira linha
+   vazava para a tela. Terceiro caso do mesmo erro nesta folha: escrever CSS
+   contra nomes de classe sem ler o markup. */
+.mv-agenda__linha-fina {
+  margin-top: var(--mv-e-3);
+  font-family: var(--mv-fonte-leitura);
+  font-size: var(--mv-t-md);
+  line-height: 1.6;
+  color: var(--mv-ink-muted);
+  max-width: 58ch;
+}
+
+/* ── lista de eventos ──────────────────────────────────────────────────── */
+
+.mv-agenda__lista { list-style: none; display: flex; flex-direction: column; }
+.mv-agenda__lista--passada { opacity: 0.62; }
+
+.mv-agenda__mes-bloco { margin-bottom: var(--mv-e-6); }
+
+.mv-agenda__mes-titulo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mv-e-3);
+  padding-bottom: var(--mv-e-2);
+  margin-bottom: var(--mv-e-2);
+  border-bottom: 2px solid var(--mv-linha);
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  color: var(--mv-ink);
+  text-transform: capitalize;
+}
+.mv-agenda__mes-conta {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 500;
+  color: var(--mv-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+.mv-evento {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--mv-e-4);
+  padding: var(--mv-e-4) var(--mv-e-3) var(--mv-e-4) 0;
+  border-bottom: 1px solid var(--mv-linha-fina);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-evento:hover { background: var(--mv-ground-sunk); transition-duration: 0ms; }
+
+/* Bloco de data: número grande, dia da semana pequeno. */
+.mv-evento__data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  padding: var(--mv-e-2) 0;
+  border-right: 2px solid var(--acento-ink);
+}
+.mv-evento__dia {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--mv-ink);
+  font-variant-numeric: tabular-nums;
+}
+.mv-evento__semana {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--mv-ink-faint);
+}
+
+.mv-evento__corpo { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.mv-evento__topo { display: flex; align-items: center; flex-wrap: wrap; gap: var(--mv-e-2); }
+
+.mv-evento__titulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-base);
+  font-weight: 600;
+  color: var(--mv-ink);
+  line-height: 1.35;
+}
+
+/* Chip de disciplina: ponto de pigmento + rótulo. Cor nunca sozinha. */
+.mv-evento__disc {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px var(--mv-e-2);
+  border-radius: var(--mv-r-full);
+  background: var(--acento-tint);
+  color: var(--acento-ink);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.mv-evento__ponto {
+  width: 6px; height: 6px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+  flex: none;
+}
+
+.mv-evento__tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--mv-ink-faint);
+}
+
+.mv-evento__obs {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--mv-ink-muted);
+  max-width: 62ch;
+}
+
+.mv-evento__autoria {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+
+/* "faltam N dias" — o dado que mais importa numa agenda de provas. */
+.mv-evento__prox {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  color: var(--acento-ink);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  padding-top: var(--mv-e-2);
+}
+
+.mv-evento__editar {
+  display: grid;
+  place-items: center;
+  width: 34px; height: 34px;
+  border-radius: var(--mv-r-sm);
+  color: var(--mv-ink-faint);
+  opacity: 0;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida),
+              background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-evento:hover .mv-evento__editar,
+.mv-evento__editar:focus-visible { opacity: 1; }
+.mv-evento__editar:hover { background: var(--mv-ground-raised); color: var(--mv-ink); }
+
+/* ── passados ──────────────────────────────────────────────────────────── */
+
+.mv-agenda__passados { margin-top: var(--mv-e-7); }
+
+.mv-agenda__alternar-passados {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  min-height: 40px;
+  padding: 0 var(--mv-e-3);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--mv-ink-muted);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-agenda__alternar-passados:hover { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+
+.mv-agenda__nada-adiante {
+  font-family: var(--mv-fonte-leitura);
+  color: var(--mv-ink-muted);
+  padding: var(--mv-e-5) 0;
+}
+
+/* ── vista de mês ──────────────────────────────────────────────────────── */
+
+.mv-mes { margin-top: var(--mv-e-4); }
+
+.mv-mes__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mv-e-3);
+  margin-bottom: var(--mv-e-4);
+}
+
+.mv-mes__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  color: var(--mv-ink);
+  text-transform: capitalize;
+  letter-spacing: var(--mv-ls-titulo);
+}
+
+.mv-mes__passo,
+.mv-mes__seta-esq {
+  display: grid;
+  place-items: center;
+  width: 38px; height: 38px;
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  color: var(--mv-ink-muted);
+  background: var(--mv-ground-raised);
+  transition: border-color var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-mes__passo:hover,
+.mv-mes__seta-esq:hover { border-color: var(--acento-ink); color: var(--acento-ink); }
+.mv-mes__seta-esq svg { transform: rotate(180deg); }
+
+.mv-mes__cabecalho,
+.mv-mes__grade {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.mv-mes__cabecalho { margin-bottom: var(--mv-e-2); }
+.mv-mes__rotulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--mv-ink-faint);
+  text-align: center;
+  padding-bottom: var(--mv-e-2);
+  border-bottom: 1px solid var(--mv-linha-fina);
+}
+
+.mv-mes__grade {
+  gap: 1px;
+  background: var(--mv-linha-fina);
+  border: 1px solid var(--mv-linha-fina);
+  border-radius: var(--mv-r-md);
+  overflow: hidden;
+}
+
+.mv-mes__celula {
+  min-height: 104px;
+  padding: var(--mv-e-2);
+  background: var(--mv-ground-raised);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.mv-mes__celula--fora { background: var(--mv-ground-sunk); }
+.mv-mes__celula--fora .mv-mes__numero { opacity: 0.38; }
+
+.mv-mes__numero {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  color: var(--mv-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hoje: disco de pigmento. */
+.mv-mes__hoje .mv-mes__numero {
+  display: grid;
+  place-items: center;
+  width: 22px; height: 22px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+}
+
+.mv-mes__eventos { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+
+.mv-mes__marca {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px var(--mv-e-2);
+  border-radius: var(--mv-r-sm);
+  background: var(--acento-tint);
+  color: var(--acento-ink);
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-mes__marca:hover { background: var(--acento-hair); }
+
+.mv-mes__ponto {
+  width: 5px; height: 5px;
+  border-radius: var(--mv-r-full);
+  background: currentColor;
+  flex: none;
+}
+
+.mv-mes__mais {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--mv-ink-faint);
+  padding-left: var(--mv-e-2);
+}
+
+.mv-mes__dica {
+  margin-top: var(--mv-e-3);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+
+/* ── formulário ────────────────────────────────────────────────────────── */
+
+.mv-forma {
+  position: fixed;
+  inset: 0;
+  z-index: var(--mv-z-modal);
+  display: grid;
+  place-items: center;
+  padding: var(--mv-e-4);
+  background: color-mix(in srgb, #241F1A 62%, transparent);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  animation: mv-forma-fundo var(--mv-d-medio) var(--mv-ease-saida);
+}
+@keyframes mv-forma-fundo { from { opacity: 0; } to { opacity: 1; } }
+
+.mv-forma__corpo {
+  width: min(540px, 100%);
+  max-height: 90vh;
+  overflow-y: auto;
+  background: var(--mv-ground-raised);
+  border-radius: var(--mv-r-lg);
+  box-shadow: var(--mv-sombra-xl);
+  animation: mv-forma-entra var(--mv-d-lento) var(--mv-ease-saida);
+}
+@keyframes mv-forma-entra {
+  from { opacity: 0; transform: translateY(12px) scale(0.985); }
+  to   { opacity: 1; transform: none; }
+}
+
+.mv-forma__cabecalho {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--mv-e-3);
+  padding: var(--mv-e-5) var(--mv-e-5) var(--mv-e-4);
+  border-bottom: 1px solid var(--mv-linha-fina);
+}
+
+.mv-forma__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  color: var(--mv-ink);
+  letter-spacing: var(--mv-ls-titulo);
+}
+
+.mv-forma__fechar {
+  display: grid;
+  place-items: center;
+  width: 38px; height: 38px;
+  border-radius: var(--mv-r-sm);
+  color: var(--mv-ink-muted);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-forma__fechar:hover { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+
+.mv-forma__campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mv-e-4);
+  padding: var(--mv-e-5);
+}
+
+.mv-campo { display: flex; flex-direction: column; gap: var(--mv-e-2); min-width: 0; }
+.mv-campo--largo { grid-column: 1 / -1; }
+
+.mv-campo__rotulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--mv-ink-muted);
+}
+
+.mv-campo__entrada,
+.mv-campo__area {
+  width: 100%;
+  min-height: 42px;
+  padding: var(--mv-e-2) var(--mv-e-3);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  background: var(--mv-ground);
+  color: var(--mv-ink);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  transition: border-color var(--mv-d-rapido) var(--mv-ease-saida),
+              box-shadow var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-campo__area { min-height: 88px; resize: vertical; line-height: 1.5; }
+.mv-campo__entrada:focus,
+.mv-campo__area:focus {
+  outline: none;
+  border-color: var(--acento-ink);
+  box-shadow: 0 0 0 3px var(--acento-glow);
+}
+
+/* Tipo de evento: rádios como botões. */
+.mv-forma__radios,
+.mv-forma__tipos { display: flex; flex-wrap: wrap; gap: var(--mv-e-2); }
+
+.mv-forma__radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 var(--mv-e-3);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  background: var(--mv-ground);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--mv-ink-muted);
+  cursor: pointer;
+  transition: all var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-forma__radio:hover { border-color: var(--mv-linha-forte); color: var(--mv-ink); }
+.mv-forma__radio input { position: absolute; opacity: 0; pointer-events: none; }
+/* O JSX marca o selecionado com a classe `esta-ativo` E o input fica checado.
+   Cobrir as duas formas evita depender de qual delas o componente usa. */
+.mv-forma__radio:has(input:checked),
+.mv-forma__radio.esta-ativo {
+  border-color: var(--acento-ink);
+  background: var(--acento-tint);
+  color: var(--acento-ink);
+  font-weight: 600;
+}
+.mv-forma__radio:has(input:focus-visible) {
+  outline: 2px solid var(--acento-ink);
+  outline-offset: 2px;
+}
+
+.mv-forma__erro {
+  grid-column: 1 / -1;
+  padding: var(--mv-e-3) var(--mv-e-4);
+  border-left: 3px solid var(--mv-erro-ink);
+  border-radius: 0 var(--mv-r-md) var(--mv-r-md) 0;
+  background: var(--mv-erro-tint);
+  color: var(--mv-erro-ink);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+}
+
+.mv-forma__rodape,
+.mv-forma__acoes {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--mv-e-3);
+  padding: var(--mv-e-4) var(--mv-e-5);
+  border-top: 1px solid var(--mv-linha-fina);
+  background: var(--mv-ground);
+  border-radius: 0 0 var(--mv-r-lg) var(--mv-r-lg);
+}
+
+.mv-forma__salvar {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  min-height: 42px;
+  padding: 0 var(--mv-e-5);
+  border-radius: var(--mv-r-md);
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-forma__salvar:hover { opacity: 0.88; }
+.mv-forma__salvar:disabled { opacity: 0.42; cursor: not-allowed; }
+
+.mv-forma__cancelar {
+  min-height: 42px;
+  padding: 0 var(--mv-e-4);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--mv-ink-muted);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-forma__cancelar:hover { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+
+.mv-forma__apagar {
+  margin-right: auto;
+  min-height: 42px;
+  padding: 0 var(--mv-e-3);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--mv-erro-ink);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-forma__apagar:hover { background: var(--mv-erro-tint); }
+
+/* Confirmação de apagar: segundo clique, no lugar do primeiro. Sem modal em
+   cima de modal. */
+.mv-forma__confirma {
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+}
+.mv-forma__apagar-sim {
+  min-height: 38px;
+  padding: 0 var(--mv-e-3);
+  border-radius: var(--mv-r-md);
+  background: var(--mv-erro-ink);
+  color: var(--mv-ink-invert);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+}
+
+/* ── estados vazios e falha ────────────────────────────────────────────── */
+
+/* `__vazio` é só o posicionador; `__prancha-vazia` é a caixa. Dar moldura aos
+   dois aninhava uma borda dentro da outra — o anti-padrão que a Prancha
+   proíbe, em dose dupla. */
+.mv-agenda__vazio {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.mv-agenda__prancha-vazia {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mv-e-3);
+  max-width: 56ch;
+  padding: var(--mv-e-8) var(--mv-e-6);
+  border: 1px dashed var(--mv-linha);
+  border-radius: var(--mv-r-lg);
+  background: color-mix(in srgb, var(--mv-ground-sunk) 55%, transparent);
+}
+
+.mv-agenda__vazio-titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  color: var(--mv-ink);
+  letter-spacing: var(--mv-ls-titulo);
+}
+.mv-agenda__vazio-texto {
+  font-family: var(--mv-fonte-leitura);
+  line-height: 1.6;
+  color: var(--mv-ink-muted);
+}
+.mv-agenda__vazio-nota {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+/* CONTÊINER, não botão.
+   Eu estilizei isto como botão deduzindo pelo nome da classe, sem olhar o
+   JSX — e ele embrulha um <p> mais o componente <Conta/>, que já é um botão.
+   O resultado era um botão renderizado dentro de outro, com os textos
+   sobrepostos na tela. */
+.mv-agenda__vazio-entrar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mv-e-3);
+}
+.mv-agenda__vazio-entrar > p {
+  font-family: var(--mv-fonte-leitura);
+  color: var(--mv-ink-muted);
+}
+
+/* Faixa "só leitura" para quem não entrou. É um <aside> com texto MAIS o
+   componente <Conta/> dentro — mesma pegadinha do vazio-entrar: estilizar
+   como botão punha um botão dentro de outro. */
+.mv-agenda__convite {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--mv-e-4);
+  margin-top: var(--mv-e-6);
+  padding: var(--mv-e-4) var(--mv-e-5);
+  border-left: 3px solid var(--acento-ink);
+  border-radius: 0 var(--mv-r-md) var(--mv-r-md) 0;
+  background: var(--acento-tint);
+}
+.mv-agenda__convite p {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--mv-ink-body);
+  max-width: 62ch;
+}
+.mv-agenda__convite strong { color: var(--acento-ink); font-weight: 700; }
+
+.mv-agenda__falha {
+  padding: var(--mv-e-4) var(--mv-e-5);
+  border-left: 3px solid var(--mv-erro-ink);
+  border-radius: 0 var(--mv-r-md) var(--mv-r-md) 0;
+  background: var(--mv-erro-tint);
+  color: var(--mv-erro-ink);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  margin-bottom: var(--mv-e-4);
+}
+
+/* ── responsivo ────────────────────────────────────────────────────────── */
+
+@media (max-width: 900px) {
+  .mv-mes__celula { min-height: 78px; }
+}
+
+@media (max-width: 640px) {
+  .mv-agenda { padding: var(--mv-e-6) var(--mv-e-4) var(--mv-e-9); }
+  .mv-agenda__cabecalho { align-items: flex-start; }
+  .mv-forma__campos { grid-template-columns: 1fr; }
+  .mv-evento { grid-template-columns: 52px minmax(0, 1fr); gap: var(--mv-e-3); }
+  .mv-evento__prox { grid-column: 2; padding-top: 0; }
+  .mv-evento__editar { opacity: 1; }
+  .mv-mes__celula { min-height: 62px; padding: 4px; }
+  .mv-mes__marca { font-size: 0.5625rem; padding: 1px 4px; }
+}

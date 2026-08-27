@@ -1,0 +1,43 @@
+.mv-carregando {
+  display: grid;
+  place-items: center;
+  min-height: 50vh;
+  opacity: 0;
+  transition: opacity var(--mv-d-medio) var(--mv-ease-saida);
+}
+.mv-carregando[data-visivel="true"] { opacity: 1; }
+
+.mv-carregando__pulso { display: flex; gap: var(--mv-e-2); }
+.mv-carregando__pulso span {
+  width: 8px; height: 8px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+  opacity: 0.3;
+  animation: mv-pulso 1.15s var(--mv-ease-suave) infinite;
+}
+.mv-carregando__pulso span:nth-child(2) { animation-delay: 0.13s; }
+.mv-carregando__pulso span:nth-child(3) { animation-delay: 0.26s; }
+
+@keyframes mv-pulso {
+  0%, 70%, 100% { opacity: 0.25; transform: translateY(0) scale(0.9); }
+  35%           { opacity: 1;    transform: translateY(-5px) scale(1); }
+}
+
+/* Esqueleto: brilho que atravessa. Fica em tint, não em cinza — cinza
+   sobre papel quente parece mancha. */
+.mv-esqueleto {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    var(--mv-ground-sunk) 0%,
+    var(--mv-linha-fina) 50%,
+    var(--mv-ground-sunk) 100%
+  );
+  background-size: 200% 100%;
+  animation: mv-brilho 1.4s var(--mv-ease-suave) infinite;
+}
+
+@keyframes mv-brilho {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}

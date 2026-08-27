@@ -1,0 +1,182 @@
+/* ============================================================================
+   Cromo compartilhado de página — herói, seção, grade, chip, estado vazio.
+   Segue a linguagem Prancha: o fio antes da caixa, cor como etiqueta,
+   densidade com hierarquia.
+   ========================================================================= */
+
+.mv-pag {
+  max-width: var(--mv-conteudo-max);
+  margin: 0 auto;
+  padding: var(--mv-e-8) var(--mv-e-7) var(--mv-e-10);
+}
+
+/* ── herói ─────────────────────────────────────────────────────────────── */
+
+.mv-heroi { max-width: 68ch; margin-bottom: var(--mv-e-8); }
+
+.mv-heroi__sobre {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-3);
+  margin-bottom: var(--mv-e-3);
+}
+/* Traço curto em pigmento antes da sobrelinha. Assinatura repetida do site:
+   é o mesmo gesto do selo de figura descrita. */
+.mv-heroi__sobre::before {
+  content: "";
+  width: 22px; height: 2px;
+  background: var(--acento-ink);
+  flex: none;
+}
+
+.mv-heroi__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-3xl);
+  font-weight: 600;
+  line-height: var(--mv-lh-apertado);
+  letter-spacing: var(--mv-ls-display);
+  color: var(--mv-ink);
+  font-variation-settings: "opsz" 100;
+  text-wrap: balance;
+}
+
+.mv-heroi__desc {
+  margin-top: var(--mv-e-4);
+  font-family: var(--mv-fonte-leitura);
+  font-size: var(--mv-t-md);
+  line-height: 1.6;
+  color: var(--mv-ink-muted);
+  max-width: 58ch;
+}
+
+/* ── fatos ─────────────────────────────────────────────────────────────
+   Números do acervo. Separados por espaço e um fio, nunca por card. */
+.mv-fatos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mv-e-6);
+  margin-top: var(--mv-e-5);
+  padding-top: var(--mv-e-4);
+  border-top: 1px solid var(--mv-linha-fina);
+}
+.mv-fato { display: flex; flex-direction: column; gap: 2px; }
+.mv-fato__n {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  color: var(--mv-ink);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.mv-fato__r {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: var(--mv-ink-faint);
+}
+
+/* ── seção ─────────────────────────────────────────────────────────────── */
+
+.mv-secao { margin-top: var(--mv-e-8); }
+
+.mv-secao__topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mv-e-4);
+  padding-bottom: var(--mv-e-3);
+  margin-bottom: var(--mv-e-5);
+  border-bottom: 2px solid var(--acento-ink);   /* o fio de disciplina */
+}
+
+.mv-secao__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-secao__nota {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ── chip de tipo de artefato ──────────────────────────────────────────
+   Sempre glifo + rótulo. Nunca só cor — petroleo e eucalipto colapsam em
+   deuteranopia (ver tokens.css). */
+.mv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px var(--mv-e-3) 3px var(--mv-e-2);
+  border-radius: var(--mv-r-full);
+  background: var(--acento-tint);
+  color: var(--acento-ink);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  white-space: nowrap;
+}
+.mv-chip__n { font-variant-numeric: tabular-nums; opacity: 0.72; }
+
+.mv-chips { display: flex; flex-wrap: wrap; gap: var(--mv-e-2); }
+
+/* ── estado vazio ──────────────────────────────────────────────────────
+   Nunca "Nenhum dado encontrado". Diz o que houve e o que fazer. */
+.mv-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--mv-e-3);
+  padding: var(--mv-e-7) var(--mv-e-6);
+  border: 1px dashed var(--mv-linha);
+  border-radius: var(--mv-r-lg);
+  background: color-mix(in srgb, var(--mv-ground-sunk) 55%, transparent);
+  max-width: 56ch;
+}
+.mv-vazio__t {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  color: var(--mv-ink);
+}
+.mv-vazio__d {
+  font-family: var(--mv-fonte-leitura);
+  color: var(--mv-ink-muted);
+  line-height: 1.6;
+}
+
+/* ── ação ──────────────────────────────────────────────────────────────── */
+
+.mv-acao {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  min-height: 44px;
+  padding: var(--mv-e-2) var(--mv-e-5);
+  border-radius: var(--mv-r-md);
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-acao:hover { opacity: 0.88; }
+
+.mv-acao--fantasma {
+  background: none;
+  color: var(--acento-ink);
+  border: 1px solid var(--acento-hair);
+}
+.mv-acao--fantasma:hover { background: var(--acento-tint); opacity: 1; }
+
+@media (max-width: 640px) {
+  .mv-pag { padding: var(--mv-e-6) var(--mv-e-4) var(--mv-e-9); }
+  .mv-fatos { gap: var(--mv-e-5); }
+}

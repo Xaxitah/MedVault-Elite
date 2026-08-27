@@ -1,0 +1,200 @@
+/* ============================================================================
+   Filtros — rail de facetas e chips
+   ============================================================================
+   Medida herdada da nav da Stripe Docs (dossiê 2.2): fundo TRANSPARENTE, sem
+   borda à direita, indentação zero, cabeçalho de grupo no mesmo corpo do item.
+   A separação é por espaço (Raycast, 2.9) — princípio 2 da Prancha: primeiro
+   espaço, depois fio; caixa é último recurso.
+   ========================================================================= */
+
+.mv-filtros {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-6);
+}
+
+.mv-filtros__topo {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mv-e-3);
+  padding-bottom: var(--mv-e-3);
+  border-bottom: 1px solid var(--mv-linha-fina);
+}
+
+.mv-filtros__limpar,
+.mv-filtros__soltar {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  color: var(--mv-ink-muted);
+  text-decoration: underline;
+  text-decoration-color: var(--mv-linha);
+  text-underline-offset: 0.25em;
+  transition: color var(--mv-d-rapido) var(--mv-ease-saida),
+              text-decoration-color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-filtros__limpar:hover,
+.mv-filtros__soltar:hover {
+  color: var(--acento-ink);
+  text-decoration-color: var(--acento-ink);
+}
+
+.mv-filtros__grupo { display: flex; flex-direction: column; gap: var(--mv-e-2); }
+
+.mv-filtros__cabecalho {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--mv-e-2);
+  padding-left: var(--mv-e-2);
+}
+
+/* Cabeçalho de grupo: MESMO corpo do item. Só peso, versalete e cor separam —
+   medido na Stripe Docs. Aumentar o corpo aqui é o que transforma um rail de
+   filtros em um menu de restaurante. */
+.mv-filtros__grupo-rotulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  letter-spacing: 0.07em;   /* palavra em português é mais longa: respira mais */
+  text-transform: uppercase;
+  color: var(--mv-ink-muted);
+}
+
+.mv-filtros__lista { list-style: none; display: flex; flex-direction: column; }
+
+/* Indentação ZERO: todos os itens no mesmo x, inclusive entre eixos. */
+.mv-filtros__opcao {
+  width: 100%;
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  padding: 4px var(--mv-e-2);
+  border-radius: var(--mv-r-sm);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 450;
+  line-height: 1.35;
+  color: var(--mv-ink-body);
+  text-align: left;
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-filtros__opcao:hover:not(:disabled) { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+.mv-filtros__opcao:disabled { opacity: 0.38; cursor: default; }
+
+.mv-filtros__opcao svg { flex: none; color: var(--mv-ink-faint); }
+
+/* Assinatura nº4 reaproveitada: círculo vazado que enche quando o filtro está
+   ligado. É o canal de FORMA que a cor sozinha não dá (deuteranopia). */
+.mv-filtros__marcador {
+  flex: none;
+  width: 7px; height: 7px;
+  border-radius: var(--mv-r-full);
+  border: 1.5px solid var(--mv-linha-forte);
+  background: transparent;
+  transition: background var(--mv-d-medio) var(--mv-ease-mola),
+              border-color var(--mv-d-medio) var(--mv-ease-mola),
+              box-shadow var(--mv-d-medio) var(--mv-ease-mola);
+}
+
+.mv-filtros__opcao-rotulo {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mv-filtros__contagem {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--mv-ink-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Ativo é tipográfico — peso e pigmento. Nem pílula, nem fundo, nem barra
+   lateral (medido na Stripe Docs; a pílula da Linear serve a ferramenta, não
+   a acervo). */
+.mv-filtros__opcao[aria-pressed="true"] {
+  color: var(--acento-ink);
+  font-weight: 650;
+}
+.mv-filtros__opcao[aria-pressed="true"] .mv-filtros__marcador {
+  background: var(--acento-ink);
+  border-color: var(--acento-ink);
+  box-shadow: 0 0 0 3px var(--acento-glow);
+}
+.mv-filtros__opcao[aria-pressed="true"] svg { color: var(--acento-ink); }
+.mv-filtros__opcao[aria-pressed="true"] .mv-filtros__contagem { color: var(--acento-ink); }
+
+/* Dedo é mais grosso que ponteiro: 44px onde há toque, 32px onde há mouse.
+   Densidade é respeito — mas alvo pequeno demais não respeita ninguém. */
+@media (pointer: coarse) {
+  .mv-filtros__opcao { min-height: 44px; }
+}
+
+/* ── chips ─────────────────────────────────────────────────────────────── */
+
+.mv-faixa {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--mv-e-2) var(--mv-e-3);
+}
+.mv-faixa__rotulo { flex: none; }
+.mv-faixa__chips { display: flex; flex-wrap: wrap; gap: var(--mv-e-2); }
+
+.mv-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  min-height: 30px;
+  padding: 3px var(--mv-e-3);
+  border: 1px solid var(--mv-linha-fina);
+  border-radius: var(--mv-r-full);
+  background: transparent;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 500;
+  color: var(--mv-ink-body);
+  transition: border-color var(--mv-d-rapido) var(--mv-ease-saida),
+              background var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-chip svg { flex: none; color: var(--mv-ink-faint); }
+.mv-chip:hover { border-color: var(--mv-linha-forte); color: var(--mv-ink); }
+
+.mv-chip[aria-pressed="true"] {
+  background: var(--acento-tint);
+  border-color: var(--acento-hair);
+  color: var(--acento-ink);
+  font-weight: 650;
+}
+.mv-chip[aria-pressed="true"] svg { color: var(--acento-ink); }
+
+.mv-chip__contagem { font-size: 0.6875rem; font-weight: 600; opacity: 0.72; }
+
+.mv-chip--ativo-remover {
+  background: var(--acento-tint);
+  border-color: var(--acento-hair);
+  color: var(--acento-ink);
+}
+.mv-chip--ativo-remover svg { color: currentColor; opacity: 0.6; }
+.mv-chip--ativo-remover:hover { border-color: var(--acento-ink); color: var(--acento-ink); }
+.mv-chip--ativo-remover:hover svg { opacity: 1; }
+
+.mv-chip__eixo {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  opacity: 0.62;
+}
+
+@media (pointer: coarse) {
+  .mv-chip { min-height: 44px; padding: 3px var(--mv-e-4); }
+}

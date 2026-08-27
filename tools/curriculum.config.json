@@ -1,0 +1,283 @@
+{
+  "_leiaMe": [
+    "Mapa disciplina -> periodo CONFIRMADO PELO DONO em 15/08/2026:",
+    "Biologia Geral = 1o periodo. Todas as demais = 7o periodo. Turma atualmente no 8o periodo.",
+    "Para corrigir no futuro: edite o campo periodo de cada disciplina e rode npm run build:content.",
+    "Nada mais no site precisa mudar - a navegacao inteira e gerada a partir daqui."
+  ],
+  "rotulosPeriodo": {
+    "1": "1º Período",
+    "2": "2º Período",
+    "3": "3º Período",
+    "4": "4º Período",
+    "5": "5º Período",
+    "6": "6º Período",
+    "7": "7º Período",
+    "8": "8º Período",
+    "9": "9º Período",
+    "10": "10º Período",
+    "11": "11º Período",
+    "12": "12º Período"
+  },
+  "ciclos": [
+    {
+      "id": "basico",
+      "rotulo": "Ciclo Básico",
+      "periodos": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": "clinico",
+      "rotulo": "Ciclo Clínico",
+      "periodos": [
+        5,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "id": "internato",
+      "rotulo": "Internato",
+      "periodos": [
+        9,
+        10,
+        11,
+        12
+      ]
+    }
+  ],
+  "disciplinas": {
+    "biologia-geral": {
+      "rotulo": "Biologia Geral",
+      "periodo": 1,
+      "acento": "musgo",
+      "descricao": "Fundamentos de biologia celular e molecular aplicados à medicina.",
+      "confianca": "confirmada"
+    },
+    "fisiologia": {
+      "rotulo": "Fisiologia",
+      "periodo": 7,
+      "acento": "coral",
+      "descricao": "Funcionamento dos sistemas do corpo humano.",
+      "confianca": "confirmada"
+    },
+    "anatomia": {
+      "rotulo": "Anatomia",
+      "periodo": 7,
+      "acento": "rosa",
+      "descricao": "Estrutura e organização do corpo humano.",
+      "confianca": "confirmada"
+    },
+    "psicologia-medica": {
+      "rotulo": "Psicologia Médica",
+      "periodo": 7,
+      "acento": "lavanda",
+      "descricao": "Relação médico-paciente, comportamento e saúde mental.",
+      "confianca": "confirmada"
+    },
+    "etica-medica": {
+      "rotulo": "Ética Médica",
+      "periodo": 7,
+      "acento": "argila",
+      "descricao": "Bioética, deontologia e responsabilidade profissional.",
+      "confianca": "confirmada"
+    },
+    "ifms": {
+      "rotulo": "IFMS",
+      "periodo": 7,
+      "acento": "areia",
+      "descricao": "Introdução à formação médica e saúde.",
+      "confianca": "confirmada"
+    },
+    "semiologia-medica": {
+      "rotulo": "Semiologia Médica",
+      "periodo": 7,
+      "acento": "eucalipto",
+      "descricao": "Anamnese, exame físico e raciocínio sindrômico.",
+      "confianca": "confirmada"
+    },
+    "pratica-semiologia-medica": {
+      "rotulo": "Prática de Semiologia Médica",
+      "periodo": 7,
+      "acento": "eucalipto",
+      "descricao": "Treino prático de propedêutica à beira do leito.",
+      "confianca": "confirmada"
+    },
+    "semiologia-quirurgica": {
+      "rotulo": "Semiologia Cirúrgica",
+      "periodo": 7,
+      "acento": "petroleo",
+      "descricao": "Propedêutica cirúrgica e abdome agudo.",
+      "confianca": "confirmada"
+    },
+    "pratica-semiologia-quirurgica": {
+      "rotulo": "Prática de Semiologia Cirúrgica",
+      "periodo": 7,
+      "acento": "petroleo",
+      "descricao": "Treino prático em semiologia cirúrgica.",
+      "confianca": "confirmada"
+    },
+    "farmacologia": {
+      "rotulo": "Farmacologia",
+      "periodo": 7,
+      "acento": "anil",
+      "descricao": "Farmacocinética, farmacodinâmica e terapêutica.",
+      "confianca": "confirmada"
+    },
+    "tecnicas-quirurgicas": {
+      "rotulo": "Técnicas Cirúrgicas",
+      "periodo": 7,
+      "acento": "petroleo",
+      "descricao": "Instrumentação, assepsia e técnica operatória.",
+      "confianca": "confirmada"
+    },
+    "urologia": {
+      "rotulo": "Urologia",
+      "periodo": 7,
+      "acento": "ametista",
+      "descricao": "Trato urinário e sistema reprodutor masculino.",
+      "confianca": "confirmada"
+    },
+    "outros": {
+      "rotulo": "Outros",
+      "periodo": 0,
+      "acento": "neutro",
+      "descricao": "Material ainda não classificado por disciplina.",
+      "confianca": "alta"
+    }
+  },
+  "parciais": {
+    "P1": {
+      "rotulo": "1ª Parcial",
+      "ordem": 1
+    },
+    "P2": {
+      "rotulo": "2ª Parcial",
+      "ordem": 2
+    },
+    "P3": {
+      "rotulo": "3ª Parcial",
+      "ordem": 3
+    },
+    "P4": {
+      "rotulo": "4ª Parcial",
+      "ordem": 4
+    },
+    "FINAL": {
+      "rotulo": "Prova Final",
+      "ordem": 5
+    },
+    "GERAL": {
+      "rotulo": "Material Geral",
+      "ordem": 9
+    }
+  },
+  "_notaParciais": [
+    "O vault escreve parciais de várias formas: 'P1', 'primeira-parcial', 'segunda-parcial', 'final', etc.",
+    "O pipeline normaliza todas para as chaves acima. Veja normalizarParcial() em build-content.mjs."
+  ],
+  "tiposArtefato": {
+    "resumo": {
+      "rotulo": "Resumos",
+      "icone": "resumo",
+      "ordem": 1,
+      "descricao": "Síntese completa do tema"
+    },
+    "revisao-vespera": {
+      "rotulo": "Revisão de Véspera",
+      "icone": "vespera",
+      "ordem": 2,
+      "descricao": "O essencial na noite anterior"
+    },
+    "mapa-mental": {
+      "rotulo": "Mapas Mentais",
+      "icone": "mapa",
+      "ordem": 3,
+      "descricao": "Estrutura visual do conteúdo"
+    },
+    "flashcard": {
+      "rotulo": "Flashcards",
+      "icone": "flashcard",
+      "ordem": 4,
+      "descricao": "Recordação ativa"
+    },
+    "questao": {
+      "rotulo": "Questões",
+      "icone": "questao",
+      "ordem": 5,
+      "descricao": "Banco de questões comentadas"
+    },
+    "quiz": {
+      "rotulo": "Quiz",
+      "icone": "quiz",
+      "ordem": 6,
+      "descricao": "Teste rápido cronometrado"
+    },
+    "podcast": {
+      "rotulo": "Podcast",
+      "icone": "podcast",
+      "ordem": 7,
+      "descricao": "Áudio para estudar em movimento"
+    },
+    "infografico": {
+      "rotulo": "Infográficos",
+      "icone": "infografico",
+      "ordem": 8,
+      "descricao": "Uma página, tudo visual"
+    },
+    "video": {
+      "rotulo": "Vídeos",
+      "icone": "video",
+      "ordem": 9,
+      "descricao": "Aulas e demonstrações"
+    },
+    "slide": {
+      "rotulo": "Slides",
+      "icone": "slide",
+      "ordem": 10,
+      "descricao": "Material de aula original"
+    },
+    "tabela": {
+      "rotulo": "Tabelas",
+      "icone": "tabela",
+      "ordem": 11,
+      "descricao": "Comparativos lado a lado"
+    },
+    "revisao-espacada": {
+      "rotulo": "Revisão Espaçada",
+      "icone": "espacada",
+      "ordem": 12,
+      "descricao": "Cronograma de repetição"
+    },
+    "historia-clinica": {
+      "rotulo": "Histórias Clínicas",
+      "icone": "clinica",
+      "ordem": 13,
+      "descricao": "Casos para treinar raciocínio"
+    },
+    "transcricao": {
+      "rotulo": "Transcrições",
+      "icone": "transcricao",
+      "ordem": 14,
+      "descricao": "Texto integral da aula"
+    },
+    "livro-capitulo": {
+      "rotulo": "Capítulos de Livro",
+      "icone": "livro",
+      "ordem": 15,
+      "descricao": "Referência bibliográfica"
+    },
+    "prova-antiga": {
+      "rotulo": "Provas Antigas",
+      "icone": "prova",
+      "ordem": 16,
+      "descricao": "Provas de anos anteriores"
+    }
+  },
+  "periodoAtual": 8
+}

@@ -1,0 +1,35 @@
+.mv-discs__grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(212px, 1fr));
+  gap: var(--mv-e-6) var(--mv-e-5);
+  align-items: start;
+}
+
+/* Selo "mais recente" ao lado do título do período. Diz algo verdadeiro em
+   vez de um rótulo decorativo. */
+.mv-discs__selo {
+  display: inline-block;
+  margin-left: var(--mv-e-3);
+  padding: 2px var(--mv-e-2);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-full);
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--mv-ink-muted);
+  vertical-align: middle;
+}
+
+.mv-discs__outros { max-width: 62ch; }
+.mv-discs__outros-desc {
+  font-family: var(--mv-fonte-leitura);
+  line-height: 1.6;
+  color: var(--mv-ink-muted);
+  margin-bottom: var(--mv-e-4);
+}
+
+@media (max-width: 520px) {
+  .mv-discs__grade { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: var(--mv-e-5) var(--mv-e-4); }
+}

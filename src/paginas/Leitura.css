@@ -1,0 +1,300 @@
+/* Vista de leitura — moldura da prancha. O texto em si vive em conteudo.css. */
+
+.mv-leitura { position: relative; }
+
+/* Progresso: uma linha de 2px no topo. Princípio 6 — o movimento revela
+   estrutura (quanto falta), não chama atenção. */
+.mv-leitura__progresso {
+  position: fixed;
+  top: var(--mv-topo-altura);
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--acento-ink);
+  transform-origin: 0 50%;
+  z-index: var(--mv-z-grudento);
+  will-change: transform;
+}
+
+.mv-leitura__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--mv-sumario-largura);
+  gap: var(--mv-e-8);
+  max-width: var(--mv-conteudo-max);
+  margin: 0 auto;
+  padding: var(--mv-e-8) var(--mv-e-7) var(--mv-e-10);
+}
+
+.mv-leitura__artigo { min-width: 0; }
+
+/* ── cabeçalho ─────────────────────────────────────────────────────────── */
+
+.mv-leitura__cabecalho {
+  max-width: 66ch;
+  margin-bottom: var(--mv-e-8);
+  padding-bottom: var(--mv-e-5);
+  border-bottom: 1px solid var(--mv-linha-fina);
+}
+
+.mv-leitura__procedencia {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--mv-e-2);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+  margin-bottom: var(--mv-e-4);
+}
+.mv-leitura__procedencia a { transition: color var(--mv-d-rapido) var(--mv-ease-saida); }
+.mv-leitura__procedencia a:hover { color: var(--acento-ink); }
+.mv-leitura__sep { color: var(--mv-ink-faint); }
+
+.mv-leitura__disc {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  font-weight: 600;
+  color: var(--acento-ink);
+}
+/* Ponto de pigmento: cor + rótulo juntos. Cor nunca sozinha (deuteranopia). */
+.mv-leitura__ponto {
+  width: 7px; height: 7px;
+  border-radius: var(--mv-r-full);
+  background: var(--acento-ink);
+  flex: none;
+}
+
+.mv-leitura__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-3xl);
+  font-weight: 600;
+  line-height: var(--mv-lh-apertado);
+  letter-spacing: var(--mv-ls-display);
+  color: var(--mv-ink);
+  font-variation-settings: "opsz" 100, "SOFT" 0;
+  text-wrap: balance;
+  margin-bottom: var(--mv-e-4);
+}
+
+.mv-leitura__meta {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--mv-e-4);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+}
+
+.mv-leitura__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  padding: 4px var(--mv-e-3);
+  background: var(--acento-tint);
+  color: var(--acento-ink);
+  border-radius: var(--mv-r-full);
+  font-weight: 600;
+  font-size: var(--mv-t-xs);
+}
+
+.mv-leitura__fato { display: inline-flex; align-items: center; gap: 6px; }
+.mv-leitura__fato svg { color: var(--mv-ink-faint); }
+
+.mv-leitura__fonte {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: var(--mv-e-4);
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  color: var(--mv-ink-muted);
+}
+
+/* ── sumário ───────────────────────────────────────────────────────────── */
+
+.mv-sumario { position: relative; }
+
+.mv-sumario__grude {
+  position: sticky;
+  top: calc(var(--mv-topo-altura) + var(--mv-e-6));
+  max-height: calc(100vh - var(--mv-topo-altura) - var(--mv-e-8));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mv-sumario__titulo { margin-bottom: var(--mv-e-3); }
+.mv-sumario__lista { list-style: none; }
+.mv-sumario__grupo + .mv-sumario__grupo { margin-top: 1px; }
+
+/* ── capítulo: a espinha varrível ──────────────────────────────────────
+   Sempre visível, tinta cheia, alvo de toque de 32px. São estes que o olho
+   percorre para se localizar; tudo abaixo é detalhe sob demanda. */
+.mv-sumario__cap {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--mv-e-2);
+  padding: 6px var(--mv-e-2) 6px var(--mv-e-3);
+  border-radius: var(--mv-r-sm);
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--mv-ink-body);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-sumario__cap:hover { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+.mv-sumario__cap.esta-aberto { color: var(--mv-ink); font-weight: 600; }
+.mv-sumario__cap.esta-ativo { color: var(--acento-ink); }
+
+/* Assinatura visual nº4: círculo vazado que enche na seção atual. O mesmo
+   gesto do marcador da nav — repetir a ideia cria reconhecimento. */
+.mv-sumario__marcador {
+  flex: none;
+  width: 5px; height: 5px;
+  margin-top: 6px;
+  border: 1px solid var(--mv-linha-forte);
+  border-radius: var(--mv-r-full);
+  background: var(--mv-ground);
+  transition: all var(--mv-d-medio) var(--mv-ease-mola);
+}
+.mv-sumario__cap.esta-aberto .mv-sumario__marcador {
+  background: var(--acento-ink);
+  border-color: var(--acento-ink);
+  transform: scale(1.4);
+  box-shadow: 0 0 0 3px var(--acento-glow);
+}
+
+.mv-sumario__texto { flex: 1; min-width: 0; }
+
+/* Quantos subitens o capítulo esconde. Diz que há profundidade ali sem
+   precisar despejá-la na tela. */
+.mv-sumario__n {
+  flex: none;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--mv-ink-faint);
+  padding-top: 1px;
+}
+
+/* ── subitens: só do capítulo aberto ───────────────────────────────────
+   Fio à esquerda em vez de indentação profunda — hierarquia no segundo eixo
+   (peso e cor), não no recuo. */
+.mv-sumario__filhos {
+  list-style: none;
+  margin: 2px 0 var(--mv-e-3);
+  padding-left: var(--mv-e-4);
+  border-left: 1px solid var(--acento-hair);
+  margin-left: 6px;
+  animation: mv-sum-abre var(--mv-d-medio) var(--mv-ease-saida);
+}
+@keyframes mv-sum-abre {
+  from { opacity: 0; transform: translateY(-3px); }
+  to   { opacity: 1; transform: none; }
+}
+.mv-sumario__filhos li[data-nivel="4"] { padding-left: var(--mv-e-3); }
+
+.mv-sumario__sub {
+  display: block;
+  padding: 4px var(--mv-e-2);
+  border-radius: var(--mv-r-sm);
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  color: var(--mv-ink-muted);
+  transition: color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-sumario__sub:hover { color: var(--mv-ink); }
+.mv-sumario__sub.esta-ativo { color: var(--acento-ink); font-weight: 600; }
+
+/* ── anterior / próximo ────────────────────────────────────────────────── */
+
+.mv-leitura__vizinhos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--mv-e-4);
+  max-width: 66ch;
+  margin-top: var(--mv-e-9);
+  padding-top: var(--mv-e-5);
+  border-top: 1px solid var(--mv-linha-fina);
+}
+
+.mv-leitura__vizinho {
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-2);
+  padding: var(--mv-e-4);
+  border-radius: var(--mv-r-md);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-leitura__vizinho:hover { background: var(--mv-ground-sunk); }
+.mv-leitura__vizinho--proximo { text-align: right; }
+
+.mv-leitura__vizinho-titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  line-height: var(--mv-lh-titulo);
+  color: var(--mv-ink);
+}
+
+/* ── falha ─────────────────────────────────────────────────────────────── */
+
+.mv-leitura__falha {
+  max-width: 44ch;
+  margin: var(--mv-e-10) auto;
+  padding: 0 var(--mv-e-5);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-3);
+  align-items: center;
+}
+.mv-leitura__falha h1 {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-2xl);
+  color: var(--mv-ink);
+}
+.mv-leitura__falha p { color: var(--mv-ink-muted); }
+
+.mv-botao {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  margin-top: var(--mv-e-3);
+  padding: var(--mv-e-3) var(--mv-e-5);
+  min-height: 44px;
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-botao:hover { opacity: 0.88; }
+
+/* ── responsivo ────────────────────────────────────────────────────────── */
+
+@media (max-width: 1180px) {
+  .mv-leitura__grade { grid-template-columns: minmax(0, 1fr); gap: var(--mv-e-6); }
+  .mv-sumario { display: none; }
+}
+
+@media (max-width: 640px) {
+  .mv-leitura__grade { padding: var(--mv-e-6) var(--mv-e-4) var(--mv-e-9); }
+  .mv-leitura__vizinhos { grid-template-columns: 1fr; }
+  .mv-leitura__vizinho--proximo { text-align: left; }
+}
+
+/* O sumário era cortado no meio dos glifos na borda inferior, sem aviso de que
+   havia mais abaixo — o crítico não tinha como saber se a lista acabava ali.
+   Um esmaecimento nos últimos 40px declara a continuação sem precisar de barra
+   de rolagem visível o tempo todo. */
+.mv-sumario__grude {
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - 40px), transparent 100%);
+}
+.mv-sumario__grude:hover { -webkit-mask-image: none; mask-image: none; }

@@ -1,0 +1,551 @@
+/* ============================================================================
+   Conteúdo — estilo de todo HTML vindo do vault
+   ============================================================================
+   Implementa a linguagem Prancha (docs/LINGUAGEM-PRANCHA.md).
+
+   Escopo: tudo aqui vive sob `.mv-prancha`, então nada vaza para a interface.
+   O HTML é gerado por tools/build-content.mjs — as classes são contrato entre
+   os dois arquivos. Mudou classe lá, muda aqui.
+   ========================================================================= */
+
+.mv-prancha {
+  /* A medida é a decisão mais importante da página.
+
+     ATENÇÃO À UNIDADE: `ch` é a largura do algarismo "0", não a de um
+     caractere médio. Numa serifada o "0" é bem mais estreito que a letra
+     típica, então `66ch` rendia ~76 caracteres por linha — quase 15 acima do
+     confortável, medido no navegador. O projeto passou semanas achando que
+     estava em 66.
+
+     Este valor foi CALIBRADO medindo caracteres reais por linha, não
+     deduzido da unidade. ~600px nesta fonte dá ~66 caracteres. */
+  --medida: 54ch;
+
+  font-family: var(--mv-fonte-leitura);
+  font-size: var(--mv-t-lg);
+  line-height: var(--mv-lh-leitura);
+  color: var(--mv-ink-body);
+  font-feature-settings: "kern" 1, "liga" 1, "onum" 1;
+
+  /* Grade de três trilhas: o texto no centro, e as bordas disponíveis para
+     figuras extravasarem. Evita `margin-left: -8rem` espalhado no CSS. */
+  display: grid;
+  grid-template-columns:
+    [borda-esq] minmax(0, 1fr)
+    [texto-inicio] min(var(--medida), 100%)
+    [texto-fim] minmax(0, 1fr) [borda-dir];
+}
+
+.mv-prancha > * { grid-column: texto-inicio / texto-fim; }
+
+/* ── ritmo vertical ────────────────────────────────────────────────────
+   O ritmo base vem de `row-gap`, NÃO de margens.
+
+   Isto não é preferência de estilo: `.mv-prancha` é um grid, e grid **não
+   colapsa margens**. Com `margin-bottom` no bloco anterior somando ao
+   `margin-top` do título, um <h2> depois de uma régua abria 7rem de vão —
+   um buraco no meio da leitura. Com gap, o espaçamento é uma decisão só, do
+   container, e margem extra em título é acréscimo deliberado. */
+.mv-prancha { row-gap: var(--mv-e-4); }
+.mv-prancha > * { margin: 0; }
+
+/* ── títulos ───────────────────────────────────────────────────────────
+   Princípio 2: hierarquia por fio e espaço, nunca por caixa. O h2 abre seção
+   com o fio de disciplina — a assinatura visual mais repetida do site. */
+
+.mv-prancha .mv-h {
+  font-family: var(--mv-fonte-display);
+  color: var(--mv-ink);
+  letter-spacing: var(--mv-ls-titulo);
+  line-height: var(--mv-lh-titulo);
+  font-variation-settings: "opsz" 40, "SOFT" 0;
+  position: relative;
+  scroll-margin-top: calc(var(--mv-topo-altura) + var(--mv-e-6));
+}
+
+.mv-prancha .mv-h--2 {
+  font-size: var(--mv-t-2xl);
+  font-weight: 600;
+  margin-top: var(--mv-e-6);
+  padding-top: var(--mv-e-4);
+  border-top: 2px solid var(--acento-ink);   /* o fio de disciplina */
+}
+.mv-prancha .mv-h--2:first-child { margin-top: 0; }
+
+.mv-prancha .mv-h--3 {
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  margin-top: var(--mv-e-5);
+}
+
+.mv-prancha .mv-h--4 {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  margin-top: var(--mv-e-4);
+  color: var(--mv-ink);
+}
+
+/* Régua logo antes de um título de seção é redundante: o próprio título já
+   traz o fio de disciplina. O vault escreve `---` antes de todo `##`, então
+   sem isto o site inteiro ganha uma linha duplicada por seção. */
+.mv-prancha hr:has(+ .mv-h) { display: none; }
+
+/* Âncora: só aparece no hover do próprio título. Presente para quem quer
+   linkar, invisível para quem só quer ler. */
+.mv-prancha .mv-ancora {
+  position: absolute;
+  left: -1.1em;
+  color: var(--acento-mid);
+  font-family: var(--mv-fonte-ui);
+  font-weight: 400;
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-prancha .mv-h:hover .mv-ancora,
+.mv-prancha .mv-ancora:focus-visible { opacity: 1; }
+
+/* ── ênfase ────────────────────────────────────────────────────────────── */
+
+.mv-prancha strong { font-weight: 600; color: var(--mv-ink); }
+.mv-prancha em { font-style: italic; }
+
+/* Termos em espanhol vêm em itálico no vault. Não é erro — é o idioma do
+   curso — então merece leitura confortável, não correção. */
+.mv-prancha em:lang(es) { font-style: italic; }
+
+.mv-prancha .mv-mark {
+  background: linear-gradient(
+    to bottom,
+    transparent 55%,
+    var(--acento-tint) 55%
+  );
+  color: inherit;
+  padding: 0 0.1em;
+  border-radius: 2px;
+}
+
+.mv-prancha a:not(.mv-ancora):not(.mv-anexo) {
+  color: var(--acento-ink);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+  text-decoration-color: var(--acento-hair);
+  transition: text-decoration-color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-prancha a:not(.mv-ancora):not(.mv-anexo):hover {
+  text-decoration-color: var(--acento-ink);
+}
+
+/* ── listas ────────────────────────────────────────────────────────────
+   Marcador em pigmento da disciplina — princípio 4: cor etiqueta, não decora. */
+
+.mv-prancha ul, .mv-prancha ol { padding-left: var(--mv-e-5); }
+.mv-prancha li + li { margin-top: var(--mv-e-2); }
+.mv-prancha li::marker { color: var(--acento-mid); font-weight: 600; }
+.mv-prancha ul ul, .mv-prancha ol ol,
+.mv-prancha ul ol, .mv-prancha ol ul { margin-top: var(--mv-e-2); }
+
+/* ── figuras ───────────────────────────────────────────────────────────
+   Princípio 2: a prancha NUNCA emoldura. Sem borda, sem sombra, sem fundo.
+   O dossiê mediu o mesmo no Ciechanowski e na grade da Stripe.
+
+   Extravasam a medida em ~25% para dar presença sem quebrar a coluna — o
+   Ciechanowski recua para 64% da medida; nós vamos ao contrário, porque
+   nossas figuras são varreduras de livro, densas, e encolher torna ilegível. */
+
+.mv-prancha .mv-fig {
+  grid-column: texto-inicio / texto-fim;
+  margin: var(--mv-e-4) 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-3);
+}
+
+/* Extravasamento pelas TRILHAS DO GRID, não por margem negativa.
+
+   A versão anterior usava `width:125% + margin-left:50% + translate:-50%`.
+   Isso ignora o container: a figura passava da borda esquerda da área de
+   conteúdo e era cortada (a legenda aparecia como "IG. 8", com o F comido),
+   e do lado direito passava POR BAIXO do sumário.
+
+   O grid já tem trilhas laterais justamente para isto. Ocupando de borda a
+   borda com `justify-self: center`, a figura ganha presença sem NUNCA poder
+   exceder o espaço disponível. */
+@media (min-width: 1100px) {
+  .mv-prancha .mv-fig {
+    grid-column: borda-esq / borda-dir;
+    justify-self: center;
+    width: min(100%, calc(var(--medida) * 1.28));
+  }
+}
+
+.mv-prancha .mv-fig__zoom {
+  display: block;
+  width: 100%;
+  cursor: zoom-in;
+  border-radius: var(--mv-r-sm);
+  overflow: hidden;
+  background: var(--mv-ground-sunk);
+  transition: outline-color var(--mv-d-rapido) var(--mv-ease-saida);
+  outline: 1px solid var(--mv-linha-fina);
+  outline-offset: 0;
+}
+.mv-prancha .mv-fig__zoom:hover { outline-color: var(--acento-hair); }
+.mv-prancha .mv-fig__zoom img { width: 100%; height: auto; }
+
+/* A legenda-prancha: assinatura visual nº3. Serifada, corpo menor, número em
+   pigmento e versalete. Nunca centralizada. */
+.mv-prancha figcaption {
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  color: var(--mv-ink-muted);
+  text-align: left;
+  padding-left: var(--mv-e-4);
+  border-left: 2px solid var(--acento-hair);
+}
+
+.mv-prancha .mv-fig__num {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--acento-ink);
+  margin-right: 0.5em;
+  white-space: nowrap;
+}
+
+/* ── figura descrita ───────────────────────────────────────────────────
+   O caso que nenhuma referência tem: 611 figuras que existem só como
+   descrição textual rica, porque a imagem nunca foi extraída do PDF e o PDF
+   de origem não está no vault.
+
+   Princípio: numa prancha, a legenda SEMPRE foi artefato de primeira classe.
+   Então isto não é imagem quebrada — é uma prancha de descrição. Fio
+   pontilhado (declara que a ilustração está ausente, sem pedir desculpas),
+   selo em versalete, descrição em serifada, procedência no pé. */
+
+.mv-prancha .mv-fig--descrita .mv-descrita {
+  border: 1px dashed var(--acento-hair);
+  border-radius: var(--mv-r-md);
+  background: color-mix(in srgb, var(--acento-tint) 34%, var(--mv-ground));
+  padding: var(--mv-e-5) var(--mv-e-5) var(--mv-e-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-3);
+}
+
+.mv-prancha .mv-descrita__selo {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--acento-ink);
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+}
+/* Traço curto antes do selo — sinaliza "aqui havia uma prancha". */
+.mv-prancha .mv-descrita__selo::before {
+  content: "";
+  width: 18px; height: 2px;
+  background: var(--acento-ink);
+  flex: none;
+}
+
+.mv-prancha .mv-descrita__titulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  line-height: var(--mv-lh-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-prancha .mv-descrita__texto {
+  font-size: 1rem;
+  line-height: 1.62;
+  color: var(--mv-ink-body);
+}
+
+.mv-prancha .mv-descrita__proc {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.75rem;
+  color: var(--mv-ink-faint);
+  padding-top: var(--mv-e-2);
+  border-top: 1px solid var(--acento-hair);
+}
+
+/* ── callouts ──────────────────────────────────────────────────────────
+   Contidos: fio à esquerda e tinta leve. Sem sombra, sem borda completa —
+   princípio 2. O vault usa muito `[!important]` e `[!warning]`. */
+
+.mv-prancha .mv-callout {
+  --co-ink: var(--mv-info-ink);
+  --co-tint: var(--mv-info-tint);
+  margin: var(--mv-e-3) 0;
+  padding: var(--mv-e-4) var(--mv-e-5);
+  border-left: 3px solid var(--co-ink);
+  border-radius: 0 var(--mv-r-md) var(--mv-r-md) 0;
+  background: var(--co-tint);
+  font-size: var(--mv-t-md);
+}
+
+.mv-prancha .mv-callout__titulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--co-ink);
+  margin-bottom: var(--mv-e-2);
+}
+
+/* Callout "seco": só o rótulo, sem corpo. Vira uma faixa de uma linha em
+   vez de uma caixa oca — normalmente é uma citação curta ou uma legenda de
+   imagem cuja figura não existe no vault. */
+.mv-prancha .mv-callout--seco {
+  padding-top: var(--mv-e-3);
+  padding-bottom: var(--mv-e-3);
+}
+.mv-prancha .mv-callout--seco .mv-callout__titulo {
+  margin-bottom: 0;
+  font-family: var(--mv-fonte-leitura);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.5;
+  color: var(--mv-ink-body);
+}
+
+.mv-prancha .mv-callout__corpo > * + * { margin-top: var(--mv-e-3); }
+.mv-prancha .mv-callout p { margin: 0; }
+.mv-prancha .mv-callout li::marker { color: var(--co-ink); }
+
+.mv-prancha .mv-callout--tip,
+.mv-prancha .mv-callout--success   { --co-ink: var(--mv-ok-ink);    --co-tint: var(--mv-ok-tint); }
+.mv-prancha .mv-callout--warning,
+.mv-prancha .mv-callout--caution   { --co-ink: var(--mv-aviso-ink); --co-tint: var(--mv-aviso-tint); }
+.mv-prancha .mv-callout--danger,
+.mv-prancha .mv-callout--error,
+.mv-prancha .mv-callout--bug,
+.mv-prancha .mv-callout--failure   { --co-ink: var(--mv-erro-ink);  --co-tint: var(--mv-erro-tint); }
+.mv-prancha .mv-callout--important { --co-ink: var(--acento-ink);   --co-tint: var(--acento-tint); }
+.mv-prancha .mv-callout--quote,
+.mv-prancha .mv-callout--abstract,
+.mv-prancha .mv-callout--example   { --co-ink: var(--mv-ink-muted); --co-tint: var(--mv-ground-sunk); }
+
+/* ── tabelas ───────────────────────────────────────────────────────────
+   Conteúdo médico é cheio de tabela comparativa. Rolam DENTRO do próprio
+   container — o body nunca rola de lado. */
+
+.mv-prancha .mv-tabela-rolagem {
+  grid-column: texto-inicio / texto-fim;
+  margin: var(--mv-e-3) 0;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border-radius: var(--mv-r-md);
+  /* Sombra de rolagem: avisa que há mais conteúdo à direita. */
+  background:
+    linear-gradient(to right, var(--mv-ground) 30%, transparent),
+    linear-gradient(to left, var(--mv-ground) 30%, transparent) 100% 0,
+    radial-gradient(farthest-side at 0 50%, rgba(74,59,42,.14), transparent),
+    radial-gradient(farthest-side at 100% 50%, rgba(74,59,42,.14), transparent) 100% 0;
+  background-repeat: no-repeat;
+  background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}
+
+@media (min-width: 1100px) {
+  .mv-prancha .mv-tabela-rolagem {
+    grid-column: borda-esq / borda-dir;
+    justify-self: center;
+    width: min(100%, calc(var(--medida) * 1.28));
+  }
+}
+
+.mv-prancha table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--mv-fonte-ui);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+
+.mv-prancha thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--acento-tint);
+  color: var(--acento-ink);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: left;
+  padding: var(--mv-e-3) var(--mv-e-4);
+  white-space: nowrap;
+  border-bottom: 2px solid var(--acento-ink);
+}
+
+.mv-prancha tbody td {
+  padding: var(--mv-e-3) var(--mv-e-4);
+  border-bottom: 1px solid var(--mv-linha-fina);
+  vertical-align: top;
+}
+.mv-prancha tbody tr:last-child td { border-bottom: none; }
+/* Faixa zebrada leve — em tabela larga é o que impede pular de linha. */
+.mv-prancha tbody tr:nth-child(even) { background: color-mix(in srgb, var(--mv-ground-sunk) 45%, transparent); }
+.mv-prancha tbody td:first-child { font-weight: 600; color: var(--mv-ink); }
+
+/* ── citação ───────────────────────────────────────────────────────────── */
+
+.mv-prancha blockquote {
+  margin: var(--mv-e-3) 0;
+  padding-left: var(--mv-e-5);
+  border-left: 2px solid var(--acento-hair);
+  font-style: italic;
+  color: var(--mv-ink-muted);
+}
+
+/* ── código ────────────────────────────────────────────────────────────── */
+
+.mv-prancha code {
+  font-family: var(--mv-fonte-mono);
+  font-size: 0.875em;
+  background: var(--mv-ground-sunk);
+  padding: 0.12em 0.38em;
+  border-radius: 4px;
+  color: var(--mv-ink);
+}
+.mv-prancha pre {
+  margin: var(--mv-e-2) 0;
+  padding: var(--mv-e-4);
+  background: var(--mv-ground-sunk);
+  border-radius: var(--mv-r-md);
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+.mv-prancha pre code { background: none; padding: 0; font-size: inherit; }
+
+/* ── mídia e anexo ─────────────────────────────────────────────────────── */
+
+.mv-prancha .mv-audio { width: 100%; margin: var(--mv-e-2) 0; }
+.mv-prancha .mv-video {
+  width: 100%;
+  margin: var(--mv-e-3) 0;
+  border-radius: var(--mv-r-md);
+  background: var(--mv-ink);
+}
+
+.mv-prancha .mv-anexo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  padding: var(--mv-e-2) var(--mv-e-3);
+  background: var(--acento-tint);
+  border: 1px solid var(--acento-hair);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 500;
+  color: var(--acento-ink);
+  text-decoration: none;
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-prancha .mv-anexo:hover { background: var(--acento-hair); }
+
+/* ── régua ─────────────────────────────────────────────────────────────── */
+
+.mv-prancha hr {
+  border: none;
+  height: 1px;
+  background: var(--mv-linha-fina);
+  margin: var(--mv-e-4) 0;
+}
+
+/* ── celular ───────────────────────────────────────────────────────────
+   Corpo cai para 18px. A medida vira a largura da tela, então a figura para
+   de extravasar — o extravasamento só faz sentido quando há margem sobrando. */
+
+@media (max-width: 640px) {
+  .mv-prancha { font-size: var(--mv-t-md); }
+  .mv-prancha .mv-h--2 { margin-top: var(--mv-e-6); }
+  .mv-prancha .mv-ancora { display: none; }
+  .mv-prancha figcaption { padding-left: var(--mv-e-3); }
+  .mv-prancha .mv-callout { padding: var(--mv-e-3) var(--mv-e-4); }
+}
+
+/* ============================================================================
+   Tratamento por FORMATO DE ARTEFATO
+   ============================================================================
+   Nem todo material se lê do mesmo jeito. Renderizar tudo como prosa contínua
+   quebrava dois formatos inteiros do acervo.
+   ========================================================================= */
+
+/* ── flashcards (31 documentos) ────────────────────────────────────────
+   O vault escreve cada carta como um cabeçalho com o código (FC-F-T08-001)
+   seguido de um parágrafo INTEIRAMENTE em negrito com "Q: … R: … Cat: …".
+   Com o corpo de leitura padrão isso virava um paredão de texto gigante —
+   e flashcard sem separação entre uma carta e outra não serve para nada.
+
+   Aqui cada código vira a etiqueta de uma carta, e o negrito volta ao peso
+   de texto: a ênfase é a estrutura Q/R, não a fonte inteira. */
+
+.mv-prancha[data-tipo="flashcard"] { row-gap: 0; }
+
+.mv-prancha[data-tipo="flashcard"] .mv-h--3,
+.mv-prancha[data-tipo="flashcard"] .mv-h--2 {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 700;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--acento-ink);
+  border-top: none;
+  padding-top: 0;
+  margin-top: var(--mv-e-5);
+  margin-bottom: var(--mv-e-2);
+}
+
+/* O parágrafo que segue o código é a carta. */
+.mv-prancha[data-tipo="flashcard"] .mv-h + p {
+  font-size: var(--mv-t-md);
+  line-height: 1.6;
+  padding: var(--mv-e-4) var(--mv-e-5);
+  background: var(--mv-ground-raised);
+  border: 1px solid var(--mv-linha-fina);
+  border-left: 3px solid var(--acento-ink);
+  border-radius: 0 var(--mv-r-md) var(--mv-r-md) 0;
+}
+
+/* Negrito em carta é marcador de campo (Q:, R:, Cat:), não ênfase de leitura.
+   Deixá-lo no peso do corpo devolve a hierarquia: o olho acha o Q e o R sem
+   que a carta inteira grite. */
+.mv-prancha[data-tipo="flashcard"] .mv-h + p strong {
+  font-weight: 700;
+  font-size: 0.75em;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--acento-ink);
+}
+
+/* ── mapas mentais (51 documentos) ─────────────────────────────────────
+   Vêm com um bloco "JSON Original (para ferramentas externas)" que ocupava a
+   página inteira — centenas de linhas de JSON entre o leitor e o conteúdo.
+   O JSON é útil para exportar, então não se apaga; encolhe para uma caixa
+   rolável de altura fixa. */
+.mv-prancha[data-tipo="mapa-mental"] pre {
+  max-height: 22rem;
+  overflow: auto;
+  font-size: 0.8125rem;
+}
+
+/* Vale para qualquer formato: bloco de código com centenas de linhas é um
+   muro no meio da leitura. Nenhum documento precisa de um <pre> de 3 telas. */
+.mv-prancha pre { max-height: 34rem; }

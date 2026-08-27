@@ -1,0 +1,186 @@
+/* Conta — gatilho discreto + painel flutuante.
+   O painel é o único lugar deste componente com elevação: ele está de fato
+   acima da página, então a sombra descreve a realidade em vez de decorar. */
+
+.mv-conta { position: relative; }
+
+.mv-conta__esqueleto {
+  display: block;
+  width: 108px;
+  height: 34px;
+  border-radius: var(--mv-r-md);
+  background: var(--mv-ground-sunk);
+}
+
+.mv-conta__gatilho {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-2);
+  width: 100%;
+  min-height: 44px;
+  padding: var(--mv-e-2) var(--mv-e-3);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  color: var(--mv-ink-body);
+  text-align: left;
+  transition:
+    background var(--mv-d-rapido) var(--mv-ease-saida),
+    color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-conta__gatilho:hover { background: var(--mv-ground-sunk); color: var(--mv-ink); }
+.mv-conta__gatilho svg { color: var(--mv-ink-faint); flex: none; }
+.mv-conta__gatilho:hover svg { color: var(--acento-ink); }
+
+.mv-conta__nome {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── avatar ─────────────────────────────────────────────────────────────── */
+
+.mv-conta__avatar {
+  flex: none;
+  border-radius: var(--mv-r-full);
+  object-fit: cover;
+  background: var(--acento-tint);
+}
+
+.mv-conta__avatar--letras {
+  display: grid;
+  place-items: center;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--acento-ink);
+  border: 1px solid var(--acento-hair);
+}
+
+/* ── painel ─────────────────────────────────────────────────────────────── */
+
+.mv-conta__painel {
+  position: absolute;
+  bottom: calc(100% + var(--mv-e-2));
+  left: 0;
+  width: min(21rem, calc(100vw - 2rem));
+  z-index: var(--mv-z-sobreposicao);
+  display: flex;
+  flex-direction: column;
+  gap: var(--mv-e-3);
+  padding: var(--mv-e-5);
+  background: var(--mv-ground-float);
+  border: 1px solid var(--mv-linha-fina);
+  border-radius: var(--mv-r-lg);
+  box-shadow: var(--mv-sombra-lg);
+  animation: mv-conta-surge var(--mv-d-rapido) var(--mv-ease-saida);
+}
+
+/* Ancorado no topo quando o gatilho está numa barra superior. */
+.mv-conta[data-alinhamento="fim"] .mv-conta__painel {
+  bottom: auto;
+  top: calc(100% + var(--mv-e-2));
+  left: auto;
+  right: 0;
+}
+
+@keyframes mv-conta-surge {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.mv-conta__cabecalho {
+  display: flex;
+  align-items: center;
+  gap: var(--mv-e-3);
+  padding-bottom: var(--mv-e-3);
+  border-bottom: 1px solid var(--mv-linha-fina);
+}
+
+.mv-conta__identidade { min-width: 0; }
+
+.mv-conta__painel-nome {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-md);
+  font-weight: 600;
+  color: var(--mv-ink);
+  line-height: var(--mv-lh-titulo);
+}
+
+.mv-conta__email,
+.mv-conta__modo,
+.mv-conta__explica,
+.mv-conta__nota {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mv-ink-muted);
+  overflow-wrap: anywhere;
+}
+
+.mv-conta__explica { font-family: var(--mv-fonte-leitura); font-size: 0.9375rem; line-height: 1.55; }
+.mv-conta__nota { color: var(--mv-ink-faint); font-size: 0.75rem; }
+
+/* ── formulário ─────────────────────────────────────────────────────────── */
+
+.mv-conta__forma { display: flex; flex-direction: column; gap: var(--mv-e-2); }
+
+.mv-conta__rotulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  letter-spacing: var(--mv-ls-larga);
+  text-transform: uppercase;
+  color: var(--mv-ink-muted);
+}
+
+.mv-conta__campo {
+  min-height: 44px;
+  padding: var(--mv-e-2) var(--mv-e-3);
+  background: var(--mv-ground);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-sm);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink);
+  transition: border-color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-conta__campo:focus { border-color: var(--acento-ink); }
+.mv-conta__campo::placeholder { color: var(--mv-ink-faint); }
+
+.mv-conta__principal {
+  min-height: 44px;
+  padding: var(--mv-e-3) var(--mv-e-4);
+  background: var(--acento-ink);
+  color: var(--mv-ink-invert);
+  border-radius: var(--mv-r-md);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-conta__principal:hover:not(:disabled) { opacity: 0.88; }
+.mv-conta__principal:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.mv-conta__acao {
+  align-self: flex-start;
+  min-height: 44px;
+  padding: var(--mv-e-2) var(--mv-e-3);
+  margin-left: calc(var(--mv-e-3) * -1);
+  border-radius: var(--mv-r-sm);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  color: var(--mv-ink-body);
+  transition: color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-conta__acao:hover { color: var(--mv-erro-ink); }
+
+.mv-conta__erro {
+  padding: var(--mv-e-2) var(--mv-e-3);
+  border-left: 3px solid var(--mv-erro-ink);
+  background: var(--mv-erro-tint);
+  border-radius: 0 var(--mv-r-sm) var(--mv-r-sm) 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--mv-ink-body);
+}

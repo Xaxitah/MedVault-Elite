@@ -1,0 +1,69 @@
+.mv-temas { list-style: none; display: flex; flex-direction: column; }
+
+.mv-tema {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto auto;
+  align-items: center;
+  gap: var(--mv-e-4);
+  padding: var(--mv-e-4) var(--mv-e-4) var(--mv-e-4) var(--mv-e-3);
+  border-bottom: 1px solid var(--mv-linha-fina);
+  min-height: 44px;
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-tema:hover { background: var(--acento-tint); transition-duration: 0ms; }
+
+/* Numeração de prancha: o tema numerado à esquerda, em pigmento, versalete.
+   É como o grupo conversa de verdade ("olha o tema 4"). */
+.mv-tema__num {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  color: var(--acento-ink);
+  opacity: 0.42;
+  min-width: 2ch;
+  text-align: right;
+  transition: opacity var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-tema:hover .mv-tema__num { opacity: 1; }
+
+.mv-tema__corpo { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.mv-tema__rotulo {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-base);
+  font-weight: 500;
+  color: var(--mv-ink);
+  line-height: 1.35;
+}
+
+/* A grade de ícones de tipo — o que o dono pediu nominalmente. */
+.mv-tema__tipos { display: flex; flex-wrap: wrap; gap: var(--mv-e-3); }
+.mv-tema__tipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+.mv-tema__tipo svg { color: var(--acento-mid); }
+
+.mv-tema__total {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  font-weight: 600;
+  color: var(--mv-ink-muted);
+}
+
+.mv-tema__seta {
+  color: var(--mv-ink-faint);
+  transition: transform var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-tema:hover .mv-tema__seta { transform: translateX(3px); color: var(--acento-ink); }
+
+@media (max-width: 640px) {
+  .mv-tema { grid-template-columns: auto minmax(0, 1fr) auto; gap: var(--mv-e-3); }
+  .mv-tema__seta { display: none; }
+  .mv-tema__num { font-size: var(--mv-t-md); }
+}

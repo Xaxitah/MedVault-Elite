@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.env
+.env.local
+.DS_Store
+
+# Conteúdo GERADO por `npm run build:content` a partir do vault e do Drive.
+# Fica fora do histórico de propósito: são ~324 MB que engordariam cada clone
+# para sempre, e qualquer pessoa reproduz rodando o comando. O deploy envia
+# estes arquivos direto para a Cloudflare, sem passar pelo git.
+public/data/
+public/media/
+docs/assets-nao-resolvidos.txt

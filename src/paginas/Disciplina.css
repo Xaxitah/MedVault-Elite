@@ -1,0 +1,79 @@
+.mv-disc__tipos { margin-top: var(--mv-e-5); }
+
+/* Parciais: lista separada por fio, não grade de cards. Prancha, princípio 2. */
+.mv-parciais { display: flex; flex-direction: column; }
+
+.mv-parcial {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--mv-e-5);
+  padding: var(--mv-e-5) var(--mv-e-4) var(--mv-e-5) 0;
+  border-bottom: 1px solid var(--mv-linha-fina);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-parcial:hover { background: var(--acento-tint); transition-duration: 0ms; }
+.mv-parcial:first-child { border-top: 1px solid var(--mv-linha-fina); }
+
+.mv-parcial__cabeca {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-left: var(--mv-e-4);
+  border-left: 3px solid var(--acento-ink);
+}
+
+.mv-parcial__rotulo {
+  font-family: var(--mv-fonte-display);
+  font-size: var(--mv-t-xl);
+  font-weight: 600;
+  letter-spacing: var(--mv-ls-titulo);
+  color: var(--mv-ink);
+}
+
+.mv-parcial__n {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+}
+
+.mv-parcial__amostra {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--mv-e-2);
+  min-width: 0;
+}
+
+.mv-parcial__tema {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-muted);
+  padding: 3px var(--mv-e-2);
+  border: 1px solid var(--mv-linha-fina);
+  border-radius: var(--mv-r-sm);
+  background: var(--mv-ground-raised);
+  max-width: 26ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mv-parcial__mais {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  font-weight: 600;
+  color: var(--acento-ink);
+  align-self: center;
+}
+
+.mv-parcial__seta {
+  color: var(--mv-ink-faint);
+  transition: transform var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-parcial:hover .mv-parcial__seta { transform: translateX(3px); color: var(--acento-ink); }
+
+@media (max-width: 900px) {
+  .mv-parcial { grid-template-columns: minmax(0, 1fr) auto; gap: var(--mv-e-3); }
+  .mv-parcial__amostra { grid-column: 1 / -1; }
+}

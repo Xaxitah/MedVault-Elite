@@ -1,0 +1,123 @@
+.mv-bib__grade {
+  display: grid;
+  grid-template-columns: 232px minmax(0, 1fr);
+  gap: var(--mv-e-7);
+  align-items: start;
+}
+
+.mv-bib__trilho {
+  position: sticky;
+  top: calc(var(--mv-topo-altura) + var(--mv-e-5));
+  max-height: calc(100vh - var(--mv-topo-altura) - var(--mv-e-7));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.mv-bib__corpo { min-width: 0; }
+
+/* ── barra de controles ────────────────────────────────────────────────── */
+
+.mv-bib__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--mv-e-3);
+  padding-bottom: var(--mv-e-3);
+  margin-bottom: var(--mv-e-2);
+  border-bottom: 2px solid var(--mv-linha);
+}
+
+.mv-bib__conta {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink-muted);
+}
+.mv-bib__conta strong { color: var(--mv-ink); font-weight: 700; }
+.mv-bib__de { color: var(--mv-ink-faint); }
+
+.mv-bib__controles { display: flex; align-items: center; gap: var(--mv-e-3); }
+
+.mv-bib__ordem select {
+  min-height: 34px;
+  padding: 0 var(--mv-e-3);
+  border: 1px solid var(--mv-linha);
+  border-radius: var(--mv-r-md);
+  background: var(--mv-ground-raised);
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-sm);
+  color: var(--mv-ink);
+  cursor: pointer;
+}
+.mv-bib__ordem select:focus-visible { outline: 2px solid var(--acento-ink); outline-offset: 2px; }
+
+.mv-bib__vistas {
+  display: inline-flex;
+  padding: 2px;
+  gap: 2px;
+  background: var(--mv-ground-sunk);
+  border-radius: var(--mv-r-md);
+}
+.mv-bib__vista {
+  display: grid;
+  place-items: center;
+  width: 32px; height: 30px;
+  border-radius: var(--mv-r-sm);
+  color: var(--mv-ink-faint);
+  transition: background var(--mv-d-rapido) var(--mv-ease-saida),
+              color var(--mv-d-rapido) var(--mv-ease-saida);
+}
+.mv-bib__vista:hover { color: var(--mv-ink); }
+.mv-bib__vista[aria-pressed="true"] {
+  background: var(--mv-ground-raised);
+  color: var(--mv-ink);
+  box-shadow: var(--mv-sombra-sm);
+}
+
+/* ── itens ─────────────────────────────────────────────────────────────── */
+
+.mv-bib__itens--lista { display: flex; flex-direction: column; }
+
+.mv-bib__itens--grade {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  gap: 0 var(--mv-e-6);
+}
+
+.mv-bib__item { min-width: 0; }
+
+/* Procedência sob o título: disciplina · formato · tema. Densidade com
+   hierarquia — quem vasculha acervo quer contexto sem abrir o item. */
+.mv-bib__proc {
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+  padding: 0 0 var(--mv-e-3) calc(var(--mv-e-3) + 16px + var(--mv-e-2));
+  margin-top: calc(var(--mv-e-3) * -1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mv-bib__disc { color: var(--acento-ink); font-weight: 600; }
+
+.mv-bib__fim { height: 1px; }
+
+.mv-bib__restante {
+  padding: var(--mv-e-5) 0;
+  text-align: center;
+  font-family: var(--mv-fonte-ui);
+  font-size: var(--mv-t-xs);
+  color: var(--mv-ink-faint);
+}
+
+.mv-bib__sugestoes { display: flex; flex-wrap: wrap; gap: var(--mv-e-2); }
+
+@media (max-width: 900px) {
+  .mv-bib__grade { grid-template-columns: minmax(0, 1fr); gap: var(--mv-e-5); }
+  .mv-bib__trilho {
+    position: static;
+    max-height: none;
+    padding-bottom: var(--mv-e-4);
+    border-bottom: 1px solid var(--mv-linha-fina);
+  }
+}
