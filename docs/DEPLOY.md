@@ -58,34 +58,54 @@ Cria a pasta `dist/` com tudo pronto. São ~325 MB e ~4.400 arquivos.
 
 ## Passo 4 — Trancar ANTES de publicar
 
-Isto vem antes de propósito, e agora por um motivo verificado.
+Isto vem antes de propósito, e por um motivo verificado.
 
-A versão anterior deste guia mandava criar uma política de Access para o
-endereço `medvault.pages.dev` antes do site existir. Fui checar na
-documentação e **não achei nada confirmando que isso funciona** — política
-para um endereço inexistente é aposta, e o preço de errar seria deixar 2.423
-figuras de livro abertas na internet.
+Uma versão anterior deste guia mandava criar a política de Access para o
+endereço do site antes dele existir. Ao conferir na documentação, **não achei
+nada confirmando que política para endereço inexistente funciona** — era
+aposta, e errar significaria deixar 2.423 figuras vindas de livros abertas.
 
-O caminho abaixo não depende de aposta: **"Protect all Workers" vale para todo
-Worker da conta, inclusive os que ainda não existem.** Ligando antes, o site
-já nasce trancado.
+O caminho abaixo não depende de aposta: **"Protect all Workers" é uma
+configuração da CONTA e vale para todo Worker, inclusive os que ainda não
+existem.** Ligando antes, o site nasce trancado.
 
-1. Entre em https://dash.cloudflare.com e vá em **Workers & Pages**
-2. Na tela de visão geral, ache o cartão **Protect all Workers**
-3. Se estiver escrito *Not enabled*, clique em **Enable Access**
-4. Em *traffic scope*, escolha **All traffic** (não "Previews only")
-5. Em **Authentication policy**, escolha:
-   - **Email domain** → o domínio do grupo (ex.: `gmail.com`), ou
-   - **Cloudflare account** → só quem estiver na sua conta
-6. Confira a *session duration* — 1 mês evita login toda hora
-7. Clique em **Apply Access**
+### 4a. Criar o Zero Trust (só na primeira vez)
 
-> **Se a conta ainda não tem Zero Trust:** o painel vai pedir para ativar antes.
-> É grátis e leva um minuto — siga o assistente e volte para o passo 3.
+Enquanto a conta não tiver Zero Trust, o painel mostra **"Set up Zero Trust"**
+no lugar da opção de proteger — é o que aparece hoje.
 
-Para uma lista de e-mails específicos em vez de um domínio inteiro, entre em
-https://one.dash.cloudflare.com → **Access → Policies**, abra a política que
-acabou de ser criada e troque o critério para **Emails**, um por linha.
+1. Em **Workers & Pages**, clique em **Set up Zero Trust**
+2. Escolha um **team name** — vira o endereço do login
+   (`<time>.cloudflareaccess.com`). Algo como `medvault` ou o nome do grupo.
+   Anote: é o que as pessoas verão ao entrar.
+3. Escolha o plano **Free** — até 50 usuários, suficiente para o grupo
+
+> **Se pedir cartão:** o plano é US$ 0, mas a Cloudflare às vezes solicita
+> forma de pagamento no cadastro. Não consegui confirmar na documentação se
+> isso acontece hoje. Se aparecer, a decisão é sua — não é cobrança, é
+> cadastro. Se preferir não informar, avise que eu monto a alternativa por
+> GitHub Pages com repositório privado.
+
+### 4b. Definir como o grupo entra
+
+Ainda no Zero Trust, em **Settings → Authentication**, confirme que
+**One-time PIN** está ativo. É o método mais simples e o certo para este caso:
+cada pessoa digita o e-mail e recebe um código. **Não precisa** de Google
+Workspace, nem que ninguém crie conta na Cloudflare.
+
+### 4c. Proteger todos os Workers
+
+Volte para **Workers & Pages**. Onde antes estava "Set up Zero Trust" agora
+aparece o cartão **Protect all Workers**:
+
+1. Clique em **Enable Access**
+2. Em *traffic scope*, escolha **All traffic** — não "Previews only"
+3. Em **Authentication policy**, escolha uma:
+   - **Email domain** → `gmail.com` (libera qualquer Gmail — prático, porém amplo)
+   - ou abra a política depois e troque para **Emails**, listando um por linha
+     (mais restrito, e o que eu recomendo para material de estudo)
+4. *Session duration*: **1 month**, para ninguém precisar logar toda hora
+5. **Apply Access**
 
 ## Passo 5 — Publicar
 
@@ -102,7 +122,7 @@ npm run deploy
 ```
 
 Sobem os ~4.400 arquivos do `dist`. No fim aparece o endereço
-`https://medvault.<sua-conta>.workers.dev`.
+`https://medvault.bughipr.workers.dev`.
 
 **Confira numa janela anônima antes de divulgar:** tem que pedir login. Se
 abrir o site direto, volte ao passo 4 — a proteção não pegou.
