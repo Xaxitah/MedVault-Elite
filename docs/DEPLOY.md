@@ -3,8 +3,8 @@
 Escrito para ser seguido do começo ao fim sem precisar saber programar.
 Cada bloco de comando pode ser copiado inteiro.
 
-**O que vamos fazer:** publicar na Cloudflare Pages com login obrigatório, para
-que só o grupo veja o conteúdo.
+**O que vamos fazer:** publicar como Worker de arquivos estáticos na Cloudflare,
+com login obrigatório, para que só o grupo veja o conteúdo.
 
 **Por que com login, e não aberto:** 2.423 das 5.145 figuras do site vêm de
 livros protegidos (Guyton, Llanio, Goodman & Gilman, Flórez, Smith/Tanagho).
@@ -56,43 +56,56 @@ npm run build
 
 Cria a pasta `dist/` com tudo pronto. São ~325 MB e ~4.400 arquivos.
 
-## Passo 4 — Trancar o acesso ANTES de publicar
+## Passo 4 — Trancar ANTES de publicar
 
-Isto vem antes de propósito. A política pode ser criada para um endereço que
-ainda não existe — e assim o site nunca fica aberto, nem por um minuto. Fazer
-na ordem contrária deixaria 2.423 figuras de livro públicas até você terminar.
+Isto vem antes de propósito, e agora por um motivo verificado.
 
-É feito no site da Cloudflare, não por comando:
+A versão anterior deste guia mandava criar uma política de Access para o
+endereço `medvault.pages.dev` antes do site existir. Fui checar na
+documentação e **não achei nada confirmando que isso funciona** — política
+para um endereço inexistente é aposta, e o preço de errar seria deixar 2.423
+figuras de livro abertas na internet.
 
-1. Entre em https://one.dash.cloudflare.com
-2. No menu, **Access → Applications → Add an application**
-3. Escolha **Self-hosted**
-4. Preencha:
-   - *Application name*: `MedVault`
-   - *Session duration*: `1 month` (assim ninguém precisa logar toda hora)
-   - *Subdomain*: `medvault` · *Domain*: `pages.dev`
-5. Em **Add policy**:
-   - *Policy name*: `Grupo de estudo`
-   - *Action*: `Allow`
-   - *Include* → `Emails` → cole os e-mails do grupo, um por linha
-6. Salve.
+O caminho abaixo não depende de aposta: **"Protect all Workers" vale para todo
+Worker da conta, inclusive os que ainda não existem.** Ligando antes, o site
+já nasce trancado.
 
-Pronto. Quem abrir o endereço recebe um código por e-mail e só entra se
-estiver na lista. Para adicionar alguém depois, é só voltar nessa política e
-incluir o e-mail — não precisa mexer no site.
+1. Entre em https://dash.cloudflare.com e vá em **Workers & Pages**
+2. Na tela de visão geral, ache o cartão **Protect all Workers**
+3. Se estiver escrito *Not enabled*, clique em **Enable Access**
+4. Em *traffic scope*, escolha **All traffic** (não "Previews only")
+5. Em **Authentication policy**, escolha:
+   - **Email domain** → o domínio do grupo (ex.: `gmail.com`), ou
+   - **Cloudflare account** → só quem estiver na sua conta
+6. Confira a *session duration* — 1 mês evita login toda hora
+7. Clique em **Apply Access**
+
+> **Se a conta ainda não tem Zero Trust:** o painel vai pedir para ativar antes.
+> É grátis e leva um minuto — siga o assistente e volte para o passo 3.
+
+Para uma lista de e-mails específicos em vez de um domínio inteiro, entre em
+https://one.dash.cloudflare.com → **Access → Policies**, abra a política que
+acabou de ser criada e troque o critério para **Emails**, um por linha.
 
 ## Passo 5 — Publicar
 
-Na primeira vez ele abre o navegador para você entrar na Cloudflare.
+Na primeira vez abre o navegador para você entrar na Cloudflare.
 
 ```bash
-npx wrangler pages deploy dist --project-name=medvault
+npx wrangler login
 ```
 
-No fim aparece o endereço `https://medvault.pages.dev`.
+Depois:
 
-**Confira agora, numa janela anônima:** tem que pedir e-mail. Se abrir o site
-direto, a política do passo 4 não pegou — não divulgue o link até corrigir.
+```bash
+npm run deploy
+```
+
+Sobem os ~4.400 arquivos do `dist`. No fim aparece o endereço
+`https://medvault.<sua-conta>.workers.dev`.
+
+**Confira numa janela anônima antes de divulgar:** tem que pedir login. Se
+abrir o site direto, volte ao passo 4 — a proteção não pegou.
 
 ---
 
@@ -101,13 +114,13 @@ direto, a política do passo 4 não pegou — não divulgue o link até corrigir
 Se mudou o **conteúdo do vault**:
 ```bash
 npm run build:content && node tools/otimizar-media.mjs && npm run build
-npx wrangler pages deploy dist --project-name=medvault
+npm run deploy
 ```
 
 Se mudou só o **site** (código, cores, layout):
 ```bash
 npm run build
-npx wrangler pages deploy dist --project-name=medvault
+npm run deploy
 ```
 
 ---
@@ -130,4 +143,4 @@ entra.
 | `build:content` acha poucos documentos | Google Drive não montado — abra o `G:` e rode de novo |
 | Imagens não aparecem no site publicado | Faltou rodar `npm run build` depois do `build:content` |
 | `wrangler` pede login toda vez | Normal na primeira; se persistir, rode `npx wrangler logout` e repita |
-| Site abre sem pedir e-mail | A política do passo 5 não foi salva ou o subdomínio está errado |
+| Site abre sem pedir login | O *Protect all Workers* está como *Previews only* em vez de *All traffic* |

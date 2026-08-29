@@ -1,0 +1,17 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "medvault",
+  "compatibility_date": "2026-08-29",
+
+  // Site só de arquivos estáticos: sem "main", então também sem "binding" —
+  // o campo de binding só vale quando existe script de Worker.
+  "assets": {
+    "directory": "./dist",
+
+    // O app usa HashRouter (as rotas vivem depois do #), então na prática só
+    // o index.html é pedido ao servidor. Mesmo assim isto fica declarado: sem
+    // ele, qualquer caminho que não case com arquivo devolveria 404 em vez de
+    // abrir o site.
+    "not_found_handling": "single-page-application"
+  }
+}

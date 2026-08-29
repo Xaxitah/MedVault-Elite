@@ -11,7 +11,8 @@
     "build:content": "node tools/build-content.mjs",
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "deploy": "wrangler deploy"
   },
   "keywords": [],
   "author": "",

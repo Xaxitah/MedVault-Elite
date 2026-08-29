@@ -4,7 +4,7 @@ Portal de estudos do grupo de medicina. Resumos, mapas mentais, flashcards,
 questões, podcasts e infográficos organizados por disciplina, período, parcial
 e tema.
 
-**Colocar no ar:** `docs/DEPLOY.md`
+**Colocar no ar:** `docs/DEPLOY.md` — Worker de assets estáticos + Cloudflare Access
 
 ## O que tem dentro
 
